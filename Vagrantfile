@@ -96,10 +96,9 @@ Vagrant.configure("2") do |config|
     sudo runuser -l vagrant -c 'yes | yay -S heroku-cli --noconfirm'
     sudo runuser -l vagrant -c 'yes | yay -S universal-ctags-git --noconfirm'
     sudo runuser -l vagrant -c 'yes | pacman -S devtools --noconfirm'
-    sudo runuser -l vagrant -c 'yes | extra-x86_64-build'
-    sudo runuser -l vagrant -c 'yes |  neovim-plug  --noconfirm'
-    sudo runuser -l vagrant -c 'yes | vim-plug  --noconfirm'
-    sudo runuser -l vagrant -c 'yes | antigen --noconfirm'
+    sudo runuser -l vagrant -c 'yes | yay -S neovim-plug  --noconfirm'
+    sudo runuser -l vagrant -c 'yes | yay -S vim-plug  --noconfirm'
+    sudo runuser -l vagrant -c 'yes | yay -S antigen-git --noconfirm'
   # yes | sudo pacman -S docker docker-compose ansible --noconfirm
   # systemctl enable docker
   # systemctl start docker
