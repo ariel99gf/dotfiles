@@ -99,7 +99,7 @@ Vagrant.configure("2") do |config|
     sudo runuser -l vagrant -c 'yes | yay -S neovim-plug  --noconfirm'
     sudo runuser -l vagrant -c 'yes | yay -S vim-plug  --noconfirm'
     sudo runuser -l vagrant -c 'yes | yay -S antigen-git --noconfirm'
-    echo -e '\n. source /usr/share/zsh/share/antigen.zsh' >> ~/.zshrc
+    echo -e '\n source /usr/share/zsh/share/antigen.zsh' >> ~/.zshrc
   # yes | sudo pacman -S docker docker-compose ansible --noconfirm
   # systemctl enable docker
   # systemctl start docker
