@@ -90,10 +90,6 @@ Vagrant.configure("2") do |config|
     sudo chmod +x strap.sh
     yes | sudo ./strap.sh --noconfirm
     yes | sudo pacman -Syuu --noconfirm
-    sudo runuser -l vagrant -c 'yes | sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
-    yes | sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    cd ~/.oh-my-zsh/custom/plugins && git clone https://github.com/softmoth/zsh-vim-mode.git && cd
-    sudo rm -rf zsh-syntax-highlighting strap.sh
     yes | sudo pacman -S yay --noconfirm
     sudo runuser -l vagrant -c 'yes | yay -Syuu --devel --timeupdate --noconfirm'
     sudo runuser -l vagrant -c 'yes | yay -S libiconv --noconfirm'
@@ -102,11 +98,10 @@ Vagrant.configure("2") do |config|
     sudo runuser -l vagrant -c 'yes | pacman -S devtools --noconfirm'
     sudo runuser -l vagrant -c 'yes | extra-x86_64-build'
     sudo runuser -l vagrant -c 'yes | yay asdf-vm --noconfirm'
-    zsh
-    sudo echo -e '\n. /opt/asdf-vm/asdf.sh' >> ~/.zshrc
+    echo -e '\n. /opt/asdf-vm/asdf.sh' >> ~/.zshrc
     autoload -Uz compinit && compinit
-    sudo echo -e '\n. /opt/asdf-vm/asdf.sh' >> ~/.bashrc
-    sudo echo -e '\n. /opt/asdf-vm/completions/asdf.bash' >> ~/.bashrc
+    echo -e '\n. /opt/asdf-vm/asdf.sh' >> ~/.bashrc
+    echo -e '\n. /opt/asdf-vm/completions/asdf.bash' >> ~/.bashrc
     source /opt/asdf-vm/asdf.sh
     source /opt/asdf-vm/completions/asdf.bash
     asdf plugin-add php
