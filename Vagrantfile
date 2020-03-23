@@ -94,7 +94,7 @@ Vagrant.configure("2") do |config|
     yes | sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     cd ~/.oh-my-zsh/custom/plugins && git clone https://github.com/softmoth/zsh-vim-mode.git && cd
     sudo rm -rf zsh-syntax-highlighting strap.sh
-    sudo pacman -S yay
+    sudo yes | pacman -S yay --noconfirm
     sudo runuser -l vagrant -c 'yes | yay -Syuu --devel --timeupdate --noconfirm'
     sudo runuser -l vagrant -c 'yes | yay -S libiconv --noconfirm'
     sudo runuser -l vagrant -c 'yes | yay -S heroku-cli --noconfirm'
