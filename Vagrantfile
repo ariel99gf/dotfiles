@@ -130,6 +130,11 @@ Vagrant.configure("2") do |config|
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
     yes | git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install
     sudo runuser -l vagrant -c 'yes | yay -S zsh-theme-powerlevel10k-git --noconfirm'
+    curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    curl -L git.io/antigen > antigen.zsh
   # yes | sudo pacman -S docker docker-compose ansible --noconfirm
   # systemctl enable docker
   # systemctl start docker
