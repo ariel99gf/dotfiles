@@ -97,34 +97,9 @@ Vagrant.configure("2") do |config|
     sudo runuser -l vagrant -c 'yes | yay -S universal-ctags-git --noconfirm'
     sudo runuser -l vagrant -c 'yes | pacman -S devtools --noconfirm'
     sudo runuser -l vagrant -c 'yes | extra-x86_64-build'
-    sudo runuser -l vagrant -c 'yes | yay asdf-vm --noconfirm'
-    echo -e '\n. /opt/asdf-vm/asdf.sh' >> ~/.zshrc
-    autoload -Uz compinit && compinit
-    echo -e '\n. /opt/asdf-vm/asdf.sh' >> ~/.bashrc
-    echo -e '\n. /opt/asdf-vm/completions/asdf.bash' >> ~/.bashrc
-    source /opt/asdf-vm/asdf.sh
-    source /opt/asdf-vm/completions/asdf.bash
-    asdf plugin-add php
-    asdf plugin-add java
-    asdf plugin-add python
-    asdf plugin-add erlang
-    asdf plugin-add elixir
-    asdf plugin-add nodejs
-    asdf plugin-add golang
-    asdf plugin-add kotlin
-    asdf plugin-add lua
-    asdf plugin-add haskell
-    asdf plugin-add gradle
-    asdf plugin-add julia
-    asdf plugin-add luaJIT
-    asdf plugin-add ruby
-    asdf plugin-add R
-    asdf plugin-add rust
-    curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    curl -L git.io/antigen > antigen.zsh
+    sudo runuser -l vagrant -c 'yes |  neovim-plug  --noconfirm'
+    sudo runuser -l vagrant -c 'yes | vim-plug  --noconfirm'
+    sudo runuser -l vagrant -c 'yes | antigen --noconfirm'
   # yes | sudo pacman -S docker docker-compose ansible --noconfirm
   # systemctl enable docker
   # systemctl start docker
