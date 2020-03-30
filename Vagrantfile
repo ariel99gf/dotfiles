@@ -69,21 +69,12 @@ Vagrant.configure("2") do |config|
     config.vm.provision "shell", inline: <<-SHELL
     yes | sudo pacman -Syuu --noconfirm
     yes | sudo pacman -S base base-devel --noconfirm
-    yes | sudo pacman -S --needed base-devel --noconfirm
-    yes | sudo pacman -S jq git tmux neovim zsh zsh-completions imagemagick libmagick wget man --noconfirm
-    yes | sudo pacman -S gcc xz --noconfirm
-    yes | sudo pacman -S ncurses --noconfirm
-    yes | sudo pacman -S glu mesa wxgtk2 libpng oniguruma --noconfirm
-    yes | sudo pacman -S libssh --noconfirm
-    yes | sudo pacman -S unixodbc --noconfirm
-    yes | sudo pacman -S binutils make gcc fakeroot --noconfirm
-    yes | sudo pacman -S autoconf automake bison freetype2 gettext icu krb5 libedit libjpeg libpng libxml2 libzip pkg-config re2c zlib unzip --noconfirm
-    yes | sudo pacman -S openssl-1.0 ctags ncurses ack the_silver_searcher fontconfig libmagick6 --noconfirm
+    yes | sudo pacman -S git svn git-lfs jq tmux neovim zsh zsh-completions imagemagick libmagick wget man --noconfirm
+    yes | sudo pacman -S gcc xz ncurses glu mesa wxgtk2 libpng oniguruma libssh unixodbc binutils make fakeroot autoconf automake bison freetype2 gettext icu krb5 libedit libjpeg libpng libxml2 libzip pkg-config re2c zlib unzip openssl-1.0 ctags ncurses ack the_silver_searcher fontconfig libmagick6 --noconfirm
     yes | sudo pacman -S nodejs php jdk-openjdk python erlang elixir go kotlin lua gradle julia  ruby r rust --noconfirm
     git config --global user.name "ariel99gf"
     git config --global user.email "ariel99gf@gmail.com"
     git config --global core.editor nvim
-    sudo curl -sLf https://spacevim.org/install.sh | bash
     sudo runuser -l vagrant -c 'curl -sLf https://spacevim.org/install.sh | bash'
     sudo curl -O https://blackarch.org/strap.sh
     sudo sha1sum strap.sh
@@ -92,26 +83,21 @@ Vagrant.configure("2") do |config|
     yes | sudo pacman -Syuu --noconfirm
     yes | sudo pacman -S yay --noconfirm
     sudo runuser -l vagrant -c 'yes | yay -Syuu --devel --timeupdate --noconfirm'
-    sudo runuser -l vagrant -c 'yes | yay -S libiconv --noconfirm'
-    sudo runuser -l vagrant -c 'yes | yay -S heroku-cli --noconfirm'
-    sudo runuser -l vagrant -c 'yes | yay -S universal-ctags-git --noconfirm'
-    sudo runuser -l vagrant -c 'yes | pacman -S devtools --noconfirm'
-    sudo runuser -l vagrant -c 'yes | yay -S neovim-plug  --noconfirm'
-    sudo runuser -l vagrant -c 'yes | yay -S vim-plug  --noconfirm'
-    sudo runuser -l vagrant -c 'yes | yay -S antigen-git --noconfirm'
+    sudo runuser -l vagrant -c 'yes | yay -S devtools neovim-plug antigen-git heroku-cli libiconv --noconfirm'
+    sudo runuser -l vagrant -c 'yes | yay -S universal-ctags-git'
     echo -e '\n source /usr/share/zsh/share/antigen.zsh' >> ~/.zshrc
-  # yes | sudo pacman -S docker docker-compose ansible --noconfirm
-  # systemctl enable docker
-  # systemctl start docker
-  # curl -L https://github.com/laravel/laravel/archive/v7.0.0.tar.gz | tar xz
-  # git clone https://github.com/laradock/laradock.git && cd laradock
-  # cp env-example .env
-  # cd
-  # mv laravel-7.0.0 my-project
-  # sudo docker pull postgres
-  # sudo docker pull mariadb
-  # sudo docker pull memcached
-  # sudo docker pull mongo
+    yes | sudo pacman -S docker docker-compose ansible --noconfirm
+    systemctl enable docker
+    systemctl start docker
+    curl -L https://github.com/laravel/laravel/archive/v7.0.0.tar.gz | tar xz
+    git clone https://github.com/laradock/laradock.git && cd laradock
+    cp env-example .env
+    cd
+    mv laravel-7.0.0 my-project
+    sudo docker pull postgres
+    sudo docker pull mariadb
+    sudo docker pull memcached
+    sudo docker pull mongo
   # git clone https://github.com/ariel99gf/dotfiles.git
   # source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
     SHELL
