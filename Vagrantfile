@@ -99,7 +99,5 @@ Vagrant.configure("2") do |config|
     sudo docker pull mariadb
     sudo docker pull memcached
     sudo docker pull mongo
-  # git clone https://github.com/ariel99gf/dotfiles.git
-  # source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
     SHELL
 end
