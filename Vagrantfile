@@ -67,6 +67,7 @@ Vagrant.configure("2") do |config|
   # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
   # documentation for more information about their specific syntax and use.
     config.vm.provision "shell", inline: <<-SHELL
+    sudo reflector --country 'United States' --latest 200 --age 24 --sort rate --save /etc/pacman.d/mirrorlist; rm -f /etc/pacman.d/mirrorlist.pacnew
     sudo pacman -Syuu --noconfirm
     sudo pacman -S base base-devel --noconfirm
     yes | sudo pacman -S git svn git-lfs jq tmux neovim zsh zsh-completions imagemagick libmagick wget man --noconfirm
