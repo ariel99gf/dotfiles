@@ -70,7 +70,7 @@ Vagrant.configure("2") do |config|
     sudo reflector --country 'United States' --latest 200 --age 24 --sort rate --save /etc/pacman.d/mirrorlist; rm -f /etc/pacman.d/mirrorlist.pacnew
     sudo pacman -Syuu --noconfirm
     sudo pacman -S base base-devel --noconfirm
-    yes | sudo pacman -S git svn git-lfs jq tmux neovim zsh zsh-completions imagemagick libmagick wget man --noconfirm
+    yes | sudo pacman -S git svn git-lfs jq tmux neovim zsh zsh-completions imagemagick libmagick wget man arch-wiki-lite --noconfirm
     sudo pacman -S gcc xz ncurses glu mesa wxgtk2 libpng oniguruma libssh unixodbc binutils make fakeroot autoconf automake bison freetype2 gettext icu krb5 libedit libjpeg libpng libxml2 libzip pkg-config re2c zlib unzip openssl-1.0 ctags ncurses ack the_silver_searcher fontconfig libmagick6 --noconfirm
     yes | sudo pacman -S nodejs php jdk-openjdk python erlang elixir go kotlin lua gradle julia  ruby r rust --noconfirm
     git config --global user.name "ariel99gf"
