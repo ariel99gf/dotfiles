@@ -29,12 +29,10 @@ Vagrant.configure("2") do |config|
   # within the machine from a port on the host machine and only allow access
   # via 127.0.0.1 to disable public access
   # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
-  # config.vm.network "forwarded_port", guest: 5432, host: 54322, host_ip: "127.0.0.1"
-  # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  # config.vm.network "private_network", ip: "192.168.0.10"
+  # config.vm.network "private_network", ip: "192.168.33.10"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -46,6 +44,7 @@ Vagrant.configure("2") do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
+    config.vm.synced_folder ".", "/vagrant", type: "nfs"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -56,7 +55,7 @@ Vagrant.configure("2") do |config|
   #   vb.gui = true
   #
   #   # Customize the amount of memory on the VM:
-  # vb.memory = "1024"
+  #   vb.memory = "1024"
   # end
   #
   # View the documentation for the provider you are using for more
@@ -65,38 +64,9 @@ Vagrant.configure("2") do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
   # documentation for more information about their specific syntax and use.
-    config.vm.provision "shell", inline: <<-SHELL
-    sudo reflector --country 'United States' --latest 200 --age 24 --sort rate --save /etc/pacman.d/mirrorlist; rm -f /etc/pacman.d/mirrorlist.pacnew
-    sudo pacman -Syuu --noconfirm
-    sudo pacman -S base base-devel --noconfirm
-    yes | sudo pacman -S git svn git-lfs jq tmux neovim zsh zsh-completions imagemagick libmagick wget man arch-wiki-lite --noconfirm
-    sudo pacman -S gcc xz ncurses glu mesa wxgtk2 libpng oniguruma libssh unixodbc binutils make fakeroot autoconf automake bison freetype2 gettext icu krb5 libedit libjpeg libpng libxml2 libzip pkg-config re2c zlib unzip openssl-1.0 ctags ncurses ack the_silver_searcher fontconfig libmagick6 --noconfirm
-    yes | sudo pacman -S nodejs php jdk-openjdk python erlang elixir go kotlin lua gradle julia  ruby r rust --noconfirm
-    git config --global user.name "ariel99gf"
-    git config --global user.email "ariel99gf@gmail.com"
-    git config --global core.editor nvim
-    sudo runuser -l vagrant -c 'curl -sLf https://spacevim.org/install.sh | bash'
-    sudo curl -O https://blackarch.org/strap.sh
-    sudo sha1sum strap.sh
-    sudo chmod +x strap.sh
-    yes | sudo ./strap.sh --noconfirm
-    yes | sudo pacman -Syuu --noconfirm
-    yes | sudo pacman -S yay --noconfirm
-    sudo runuser -l vagrant -c 'yes | yay -Syuu --devel --timeupdate --noconfirm'
-    sudo runuser -l vagrant -c 'yes | yay -S devtools neovim-plug antigen-git heroku-cli libiconv --noconfirm'
-    sudo runuser -l vagrant -c 'yes | yay -S universal-ctags-git'
-    echo -e '\n source /usr/share/zsh/share/antigen.zsh' >> ~/.zshrc
-    yes | sudo pacman -S docker docker-compose ansible --noconfirm
-    systemctl enable docker
-    systemctl start docker
-    curl -L https://github.com/laravel/laravel/archive/v7.0.0.tar.gz | tar xz
-    git clone https://github.com/laradock/laradock.git && cd laradock
-    cp env-example .env
-    cd
-    mv laravel-7.0.0 my-project
-    sudo docker pull postgres
-    sudo docker pull mariadb
-    sudo docker pull memcached
-    sudo docker pull mongo
-    SHELL
+  # config.vm.provision "shell", inline: <<-SHELL
+    config.vm.provision "shell", path: "httpd_1.sh"
+  #   apt-get update
+  #   apt-get install -y apache2
+  # SHELL
 end
