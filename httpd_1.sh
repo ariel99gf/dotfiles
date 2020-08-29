@@ -9,33 +9,12 @@ sudo curl -O https://blackarch.org/strap.sh
 sudo sha1sum strap.sh
 sudo chmod +x strap.sh
 yes | sudo ./strap.sh --noconfirm
-sudo rm -rf .strap.sh
-yes | sudo pacman -Syuu --noconfirm
-yes | sudo pacman -S yay --noconfirm
-sudo runuser -l vagrant -c 'yes | yay -Syuu --devel --timeupdate --noconfirm'
-sudo runuser -l vagrant -c 'yes | yay -S devtool asdf rcm heroku-cli libiconv --noconfirm'
-sudo runuser -l vagrant -c 'yes | yay -S universal-ctags-git'
+sudo rm -rf ~/.strap.sh
+yes | sudo pacman -Syuu --noconfirm 
+yes | sudo pacman -S yay --noconfirm 
+sudo runuser -l vagrant -c 'yes | yay -Syuu --devel --timeupdate --noconfirm' 
+sudo runuser -l vagrant -c 'yes | yay -S devtools asdf rcm heroku-cli --noconfirm' 
+sudo runuser -l vagrant -c 'yes | yay -S universal-ctags-git' 
 yes | sudo pacman -S docker docker-compose --noconfirm
-systemctl enable docker
-systemctl start docker
-git clone https://github.com/laradock/laradock.git && cd laradock
-cp env-example .env
-cd
-chsh -s $(which zsh)
-vagrant
-su - vagrant
-vagrant
-git clone git://github.com/thoughtbot/dotfiles.git ~/dotfiles
-cd dotfiles
-env RCRC=$HOME/dotfiles/rcrc rcup
-cd
-mkdir ~/dotfiles-local
-touch ~/dotfiles-local/aliases.local
-mkdir ~/dotfiles-local/git_template.local/
-touch ~/dotfiles-local/gitconfig.local
-touch ~/dotfiles-local/psqlrc.local
-touch ~/dotfiles-local/tmux.conf.local
-touch ~/dotfiles-local/vimrc.local
-touch ~/dotfiles-local/vimrc.bundles.local
-touch ~/dotfiles-local/zshrc.local
-mkdir ~/dotfiles-local/zsh/configs/*
+sudo runuser -l vagrant -c 'chsh -s $(which zsh)'
+sudo runuser -l vagrant -c 'git clone git://github.com/thoughtbot/dotfiles.git ~/dotfiles'
