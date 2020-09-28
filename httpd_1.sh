@@ -9,7 +9,7 @@ sudo curl -O https://blackarch.org/strap.sh
 sudo sha1sum strap.sh
 sudo chmod +x strap.sh
 yes | sudo ./strap.sh --noconfirm
-sudo rm -rf ~/.strap.sh
+sudo rm -rf ~/strap.sh
 yes | sudo pacman -Syuu --noconfirm 
 yes | sudo pacman -S yay --noconfirm 
 sudo runuser -l vagrant -c 'yes | yay -Syuu --devel --timeupdate --noconfirm' 
