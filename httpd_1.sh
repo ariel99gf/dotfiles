@@ -13,8 +13,7 @@ sudo rm -rf ~/strap.sh
 yes | sudo pacman -Syuu --noconfirm 
 yes | sudo pacman -S yay --noconfirm 
 sudo runuser -l vagrant -c 'yes | yay -Syuu --devel --timeupdate --noconfirm' 
-sudo runuser -l vagrant -c 'yes | yay -S devtools asdf-vm rcm heroku-cli --noconfirm' 
-sudo runuser -l vagrant -c 'yes | yay -S universal-ctags-git' 
+sudo runuser -l vagrant -c 'yes | yay -S devtools asdf-vm rcm heroku-cli bfg universal-ctags-git --noconfirm' 
 yes | sudo pacman -S docker docker-compose --noconfirm
 sudo runuser -l vagrant -c 'chsh -s $(which zsh)'
 sudo runuser -l vagrant -c 'git clone git://github.com/thoughtbot/dotfiles.git ~/dotfiles'
