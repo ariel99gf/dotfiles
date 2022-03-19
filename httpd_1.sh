@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo reflector --country 'United States' --latest 200 --age 24 --sort rate --save /etc/pacman.d/mirrorlist; rm -f /etc/pacman.d/mirrorlist.pacnew
+sudo reflector --country 'United States' --latest 200 --protocol https --age 24 --sort rate --save /etc/pacman.d/mirrorlist; rm -f /etc/pacman.d/mirrorlist.pacnew
 sudo pacman -Syuu --noconfirm
 sudo pacman -S base base-devel --noconfirm
 yes | sudo pacman -S git svn git-lfs jq tmux neovim zsh zsh-completions imagemagick libmagick wget man arch-wiki-lite --noconfirm
