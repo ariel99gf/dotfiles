@@ -8,7 +8,7 @@ sudo pacman -S reflector --noconfirm
 sudo reflector --country 'United States' --latest 200 --protocol https --age 24 --sort rate --save /etc/pacman.d/mirrorlist; rm -f /etc/pacman.d/mirrorlist.pacnew
 sudo pacman -S base base-devel --noconfirm
 yes | sudo pacman -S git svn git-lfs jq tmux neovim zsh zsh-completions imagemagick libmagick wget man arch-wiki-lite jdk-openjdk kotlin rust npm yarn ruby --noconfirm
-sudo pacman -S gcc xz ncurses glu mesa wxgtk2 libpng oniguruma libssh unixodbc binutils make fakeroot autoconf automake bison freetype2 gettext icu krb5 libedit libjpeg libpng libxml2 libzip pkg-config re2c zlib unzip openssl-1.0 ctags ncurses ack the_silver_searcher fontconfig exa tldr dust fd tokei procs hyperfine skim sd bottom bat --noconfirm
+yes | sudo pacman -S gcc xz ncurses glu mesa libpng oniguruma libssh unixodbc binutils make fakeroot autoconf automake bison freetype2 gettext icu krb5 libedit libjpeg libpng libxml2 libzip pkg-config re2c zlib unzip openssl ctags ncurses ack the_silver_searcher fontconfig exa tldr dust fd tokei procs hyperfine skim sd bottom bat --needed
 curl -O https://blackarch.org/strap.sh
 echo 5ea40d49ecd14c2e024deecf90605426db97ea0c strap.sh | sha1sum -c
 chmod +x strap.sh
