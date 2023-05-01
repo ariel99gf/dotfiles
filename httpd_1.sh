@@ -19,6 +19,8 @@ cd /opt && sudo git clone https://aur.archlinux.org/yay-git.git && sudo chown -R
 sudo runuser -l vagrant -c 'yes | yay -Syuu --devel --timeupdate --noconfirm' 
 sudo runuser -l vagrant -c 'yes | yay -S devtools asdf-vm rcm heroku-cli bfg universal-ctags-git zsh-theme-powerlevel10k-git --noconfirm' 
 yes | sudo pacman -S docker docker-compose --noconfirm
+curl -s "https://get.sdkman.io" | bash
+source "$HOME/.sdkman/bin/sdkman-init.sh"
 sudo runuser -l vagrant -c 'chsh -s $(which zsh)'
 sudo runuser -l vagrant -c 'git clone git://github.com/thoughtbot/dotfiles.git ~/dotfiles'
 bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh) -y
