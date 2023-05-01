@@ -15,7 +15,7 @@ chmod +x strap.sh
 sudo ./strap.sh
 sudo rm -rf ~/strap.sh
 yes | sudo pacman -Syuu --noconfirm 
-yes | sudo pacman -S yay --noconfirm 
+cd /opt && sudo git clone https://aur.archlinux.org/yay-git.git && sudo chown -R $USER:$USER ./yay-git && cd yay-git && makepkg -si && yay -Syu --devel --timeupdate
 sudo runuser -l vagrant -c 'yes | yay -Syuu --devel --timeupdate --noconfirm' 
 sudo runuser -l vagrant -c 'yes | yay -S devtools asdf-vm rcm heroku-cli bfg universal-ctags-git zsh-theme-powerlevel10k-git --noconfirm' 
 yes | sudo pacman -S docker docker-compose --noconfirm
