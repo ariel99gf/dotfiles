@@ -25,5 +25,6 @@ curl https://mise.run | sh
 curl -L git.io/antigen >~/.antigen.zsh
 source "$HOME/.sdkman/bin/sdkman-init.sh"
 chsh -s "$(which zsh)"
+sudo usermod -aG docker "${USER}"
 git clone https://github.com/LazyVim/starter ~/.config/nvim
 rm -rf ~/.config/nvim/.git
