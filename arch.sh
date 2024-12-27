@@ -18,7 +18,7 @@ sudo rm -rf ~/strap.sh
 yes | sudo pacman -Syuu --noconfirm
 cd /opt && sudo git clone https://aur.archlinux.org/yay-git.git && sudo chown -R "$USER:$USER" ./yay-git && cd yay-git && makepkg -si && yay -Syu --devel --timeupdate
 yes | yay -Syuu --devel --timeupdate --noconfirm
-yes | yay -S devtools asdf-vm rcm heroku-cli bfg universal-ctags-git zsh-theme-powerlevel10k-git --noconfirm
+yes | yay -S devtools asdf-vm rcm bfg universal-ctags-git zsh-theme-powerlevel10k-git --noconfirm
 curl -s "https://get.sdkman.io" | bash
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 curl https://mise.run | sh
