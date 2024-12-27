@@ -1,1 +1,5 @@
-/home/ariel/.gitconfig
+[init]
+	defaultBranch = main
+[user]
+	name = Ariel Fonseca
+	email = ariel99gf@gmail.com
