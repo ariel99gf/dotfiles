@@ -21,6 +21,10 @@ antigen theme https://github.com/denysdovhan/spaceship-zsh-theme spaceship
 antigen apply
 
 eval "$(~/.local/bin/mise activate zsh)"
+eval "$(pyenv init -)"
+export WORKON_HOME=$HOME/.virtualenvs
+#source /usr/local/bin/virtualenvwrapper.sh
+export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
 
 . /etc/profile.d/fzf.zsh
 
@@ -30,5 +34,25 @@ if [ -f '/home/ariel/google-cloud-sdk/path.zsh.inc' ]; then . '/home/ariel/googl
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/ariel/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/ariel/google-cloud-sdk/completion.zsh.inc'; fi
 
+# Enable Windows Vagrant access in WSL
 export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"
-export PATH="$PATH:/mnt/c/Program Files/Oracle/VirtualBox"
+export PATH=$PATH:/mnt/c/Program\ Files/Oracle/VirtualBox
+
+# Rust CLI alternatives
+eval "$(zoxide init zsh)"
+alias cat='bat'
+alias ls='exa --icons'
+alias cp='xcp'
+alias cd='z'
+alias du='dust'
+alias find='fd'
+alias ps='procs'
+alias top='btn'
+alias tree='broot'
+
+export PATH="$HOME/.cargo/bin:$PATH"
+
+# Mise activation
+eval "$(/home/ariel/.local/bin/mise activate zsh)"
+
+source /home/ariel/.config/broot/launcher/bash/br
