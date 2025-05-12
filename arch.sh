@@ -166,8 +166,7 @@ fi
 echo "--> Instalando pacotes do AUR via Yay..."
 # Agora podemos usar o yay que acabamos de instalar (ou que já existia)
 yay -S --noconfirm --needed \
-    mise \
-    google-chrome # Exemplo, adicione outros pacotes AUR aqui
+    mise
 
 # --- Configuração do Flatpak e Instalação do Zen Browser ---
 echo "--> Instalando e Configurando Flatpak..."
