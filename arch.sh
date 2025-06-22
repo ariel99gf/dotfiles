@@ -50,7 +50,7 @@ fi
 # --- Instalação de Pacotes Essenciais e Ferramentas ---
 echo "--> Instalando pacotes essenciais e ferramentas via Pacman..."
 yes | sudo pacman -S --noconfirm --needed \
-  base-devel git neovim zsh stow tmux fzf ripgrep fd bat eza zoxide \
+  base-devel git git-delta neovim zsh stow tmux fzf ripgrep fd bat eza zoxide \
   docker docker-compose kubectl minikube wget curl unzip tar gzip htop bottom broot \
   ttf-jetbrains-mono-nerd noto-fonts-emoji openssh polkit-kde-agent \
   waybar hyprland xdg-desktop-portal-hyprland swaybg grim slurp wl-clipboard cliphist wofi mako \
@@ -79,7 +79,7 @@ fi
 
 # --- Instalação de Pacotes do AUR via Yay ---
 echo "--> Instalando pacotes do AUR via Yay..."
-yay -S --noconfirm --needed mise
+yay -S --noconfirm --needed mise tofi
 
 # --- Instalação de Linguagens de Programação com Mise ---
 echo "--> Configurando e instalando linguagens com Mise..."
