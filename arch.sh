@@ -176,12 +176,15 @@ fi
 if [ "$SKIP_STOW" = false ] && [ -d "$DOTFILES_DIR" ]; then
   echo "--> Configurando dotfiles com Stow..."
   cd "$DOTFILES_DIR"
-  STOW_DIRS=(gitconf tmux zsh)
+  STOW_DIRS=(gitconf tmux zsh hypr waybar kitty dunst wlogout tofi assets)
+
   echo "--> Criando links para: ${STOW_DIRS[*]}"
+  # -v (verbose), -S (stow), -t ~ (target é o diretório home)
+  # Adicionado --adopt para tentar resolver conflitos movendo arquivos existentes
   if stow --adopt -vSt ~ "${STOW_DIRS[@]}"; then
-    echo "--> Links simbólicos (stow) criados/adotados com sucesso."
+    echo "--> Links simbólicos (stow) criados/adotados com sucesso para ${STOW_DIRS[*]}."
   else
-    echo "--> AVISO: Ocorreram erros ao executar o stow."
+    echo "--> AVISO: Ocorreram erros ao executar o stow para ${STOW_DIRS[*]}. Verifique as mensagens acima."
   fi
 
   NVIM_SOURCE_PATH="$DOTFILES_DIR/nvim/.config/nvim"
