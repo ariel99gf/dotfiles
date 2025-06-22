@@ -114,7 +114,7 @@ mkdir -p "$HOME/.ssh"
 
 echo ""
 echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-echo "!! AÇÃO NECESSÁRIA: Configure sua chave SSH existente do Bitwarden.               !!"
+echo "!! AÇÃO NECESSÁRIA: Configure sua chave SSH existente do Bitwarden.           !!"
 echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 echo ""
 echo "1. Abra o aplicativo Bitwarden (que acabamos de instalar)."
@@ -136,7 +136,7 @@ chmod 644 "$SSH_KEY_PUB_PATH"
 echo "--> Permissões configuradas com sucesso."
 echo ""
 echo "--> Agora, teste a sua conexão com o GitHub executando o seguinte comando em outro terminal:"
-echo "   ssh -T git@github.com"
+echo "    ssh -T git@github.com"
 echo ""
 read -r -p "Pressione ENTER após testar a conexão e confirmar que funciona..."
 echo ""
@@ -211,8 +211,11 @@ else
   echo "--> Pulando configuração com Stow."
 fi
 
-# --- Configurações Finais ---
+---
+### Configurações Finais
+---
 echo "--> Configurando Docker..."
+sudo groupadd docker
 sudo usermod -aG docker $USER
 sudo systemctl enable docker.service
 sudo systemctl start docker.service
@@ -225,18 +228,23 @@ else
   echo "--> Zsh já é o shell padrão."
 fi
 
+echo "--> Baixando Antigen para Zsh..."
+curl -L git.io/antigen > "$HOME/antigen.zsh"
+echo "--> Antigen baixado com sucesso em '$HOME/antigen.zsh'."
+
 echo ""
 echo "### Configuração Concluída! ###"
 echo ""
 echo "Próximos passos recomendados:"
 echo "1. **Reiniciar o sistema** ou fazer **logout e login**."
-echo "2. Explorar os aplicativos instalados: Brave Browser, Bitwarden, Ente Auth, etc."
-echo "3. **Verificar Dotfiles:** Confirme se os links simbólicos foram criados corretamente em seu diretório home (para gitconf, tmux, zsh) e em ~/.config (para nvim)."
-echo "4. **Configurar o Timeshift:** Abra o Timeshift (procure no menu de aplicativos ou execute 'timeshift-launcher' no terminal) e configure os backups do sistema."
-echo "5. **Abrir o Neovim:** Execute 'nvim'. Se a configuração foi linkada corretamente, ele deve carregar suas configurações. Use :Lazy (ou o comando do seu gerenciador) para instalar plugins."
-echo "6. **Abrir o Tmux:** Execute 'tmux'. Se a configuração foi linkada, ele deve carregar suas configurações. Use o prefixo + I (geralmente Ctrl+b + I) para instalar plugins do TPM, se configurado."
-echo "7. **Configurar o Minikube/Kubectl:** Siga a documentação para iniciar o Minikube ('minikube start') ou configurar o kubectl para conectar ao seu cluster."
-echo "8. **Configurar o Hyprland:** Edite os arquivos em ~/.config/hypr/, ~/.config/waybar/, etc., conforme necessário."
-echo "9. **Iniciar o Hyprland:** Use um Display Manager (como SDDM, GDM, Ly) ou inicie manualmente a partir do TTY (geralmente executando 'Hyprland')."
-echo "10. **Verificar Agente Polkit:** Certifique-se de que '/usr/lib/polkit-kde-authentication-agent-1' (ou outro agente) está sendo iniciado com sua sessão Hyprland."
-echo "11. **Explorar Novos Aplicativos:** Lembre-se que Ghostty (terminal), Timeshift (backup) e Zen Browser (navegador via Flatpak) foram instalados."
+echo "2. **Configurar o Zsh para usar Antigen:** Adicione 'source ~/antigen.zsh' e a configuração dos seus plugins Zsh ao seu arquivo ~/.zshrc."
+echo "3. Explorar os aplicativos instalados: Brave Browser, Bitwarden, Ente Auth, etc."
+echo "4. **Verificar Dotfiles:** Confirme se os links simbólicos foram criados corretamente em seu diretório home (para gitconf, tmux, zsh) e em ~/.config (para nvim)."
+echo "5. **Configurar o Timeshift:** Abra o Timeshift (procure no menu de aplicativos ou execute 'timeshift-launcher' no terminal) e configure os backups do sistema."
+echo "6. **Abrir o Neovim:** Execute 'nvim'. Se a configuração foi linkada corretamente, ele deve carregar suas configurações. Use :Lazy (ou o comando do seu gerenciador) para instalar plugins."
+echo "7. **Abrir o Tmux:** Execute 'tmux'. Se a configuração foi linkada, ele deve carregar suas configurações. Use o prefixo + I (geralmente Ctrl+b + I) para instalar plugins do TPM, se configurado."
+echo "8. **Configurar o Minikube/Kubectl:** Siga a documentação para iniciar o Minikube ('minikube start') ou configurar o kubectl para conectar ao seu cluster."
+echo "9. **Configurar o Hyprland:** Edite os arquivos em ~/.config/hypr/, ~/.config/waybar/, etc., conforme necessário."
+echo "10. **Iniciar o Hyprland:** Use um Display Manager (como SDDM, GDM, Ly) ou inicie manualmente a partir do TTY (geralmente executando 'Hyprland')."
+echo "11. **Verificar Agente Polkit:** Certifique-se de que '/usr/lib/polkit-kde-authentication-agent-1' (ou outro agente) está sendo iniciado com sua sessão Hyprland."
+echo "12. **Explorar Novos Aplicativos:** Lembre-se que Ghostty (terminal), Timeshift (backup) e Zen Browser (navegador via Flatpak) foram instalados."
