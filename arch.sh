@@ -176,7 +176,7 @@ fi
 if [ "$SKIP_STOW" = false ] && [ -d "$DOTFILES_DIR" ]; then
   echo "--> Configurando dotfiles com Stow..."
   cd "$DOTFILES_DIR"
-  STOW_DIRS=(gitconf tmux zsh hypr waybar kitty dunst wlogout tofi assets)
+  STOW_DIRS=(gitconf tmux zsh hypr waybar dunst wlogout tofi assets)
 
   echo "--> Criando links para: ${STOW_DIRS[*]}"
   # -v (verbose), -S (stow), -t ~ (target é o diretório home)
