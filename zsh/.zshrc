@@ -20,8 +20,7 @@ antigen theme https://github.com/denysdovhan/spaceship-zsh-theme spaceship
 # Tell Antigen that you're done.
 antigen apply
 
-eval "$(~/.local/bin/mise activate zsh)"
-eval "$(pyenv init -)"
+eval "$(/usr/bin/mise activate zsh)"
 export WORKON_HOME=$HOME/.virtualenvs
 #source /usr/local/bin/virtualenvwrapper.sh
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
@@ -53,8 +52,6 @@ alias tree='broot'
 export PATH="$HOME/.cargo/bin:$PATH"
 
 # Mise activation
-eval "$(/home/ariel/.local/bin/mise activate zsh)"
-
-source /home/ariel/.config/broot/launcher/bash/br
+eval "$(/usr/bin/mise activate zsh)"
 
 export SSH_AUTH_SOCK=/home/ariel/.var/app/com.bitwarden.desktop/data/.bitwarden-ssh-agent.sock

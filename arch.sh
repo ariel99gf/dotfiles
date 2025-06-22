@@ -229,7 +229,7 @@ else
 fi
 
 echo "--> Baixando Antigen para Zsh..."
-curl -L git.io/antigen > "$HOME/antigen.zsh"
+curl -L git.io/antigen > "$HOME/.antigen.zsh"
 echo "--> Antigen baixado com sucesso em '$HOME/antigen.zsh'."
 
 echo ""
