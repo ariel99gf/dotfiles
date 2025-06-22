@@ -56,3 +56,5 @@ export PATH="$HOME/.cargo/bin:$PATH"
 eval "$(/home/ariel/.local/bin/mise activate zsh)"
 
 source /home/ariel/.config/broot/launcher/bash/br
+
+export SSH_AUTH_SOCK=/home/ariel/.var/app/com.bitwarden.desktop/data/.bitwarden-ssh-agent.sock
