@@ -59,6 +59,40 @@ yes | sudo pacman -S --noconfirm --needed \
   pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber pavucontrol \
   brightnessctl network-manager-applet ghostty timeshift
 
+### Instalação e Configuração do LazyVim
+echo "--> Iniciando instalação do LazyVim..."
+
+echo "--> Fazendo backup dos arquivos atuais do Neovim (se existirem)..."
+# required
+if [ -d "$HOME/.config/nvim" ]; then
+  mv "$HOME/.config/nvim" "$HOME/.config/nvim.bak_$(date +%Y%m%d%H%M%S)"
+  echo "    Backup de ~/.config/nvim criado."
+fi
+
+# optional but recommended
+if [ -d "$HOME/.local/share/nvim" ]; then
+  mv "$HOME/.local/share/nvim" "$HOME/.local/share/nvim.bak_$(date +%Y%m%d%H%M%S)"
+  echo "    Backup de ~/.local/share/nvim criado."
+fi
+if [ -d "$HOME/.local/state/nvim" ]; then
+  mv "$HOME/.local/state/nvim" "$HOME/.local/state/nvim.bak_$(date +%Y%m%d%H%M%S)"
+  echo "    Backup de ~/.local/state/nvim criado."
+fi
+if [ -d "$HOME/.cache/nvim" ]; then
+  mv "$HOME/.cache/nvim" "$HOME/.cache/nvim.bak_$(date +%Y%m%d%H%M%S)"
+  echo "    Backup de ~/.cache/nvim criado."
+fi
+
+echo "--> Clonando o starter do LazyVim..."
+git clone https://github.com/LazyVim/starter "$HOME/.config/nvim"
+
+echo "--> Removendo a pasta .git do LazyVim..."
+rm -rf "$HOME/.config/nvim/.git"
+
+echo "--> LazyVim instalado com sucesso!"
+
+# Continuação do Script Original
+
 # --- Instalação do Yay (AUR Helper) ---
 echo "--> Instalando Yay (AUR Helper)..."
 if ! command -v yay &>/dev/null; then
@@ -187,36 +221,19 @@ if [ "$SKIP_STOW" = false ] && [ -d "$DOTFILES_DIR" ]; then
     echo "--> AVISO: Ocorreram erros ao executar o stow para ${STOW_DIRS[*]}. Verifique as mensagens acima."
   fi
 
-  NVIM_SOURCE_PATH="$DOTFILES_DIR/nvim/.config/nvim"
-  NVIM_TARGET_PATH="$HOME/.config/nvim"
-  echo "--> Tratando configuração do nvim separadamente..."
-  if [ -d "$NVIM_SOURCE_PATH" ]; then
-    mkdir -p "$HOME/.config"
-    if [ -L "$NVIM_TARGET_PATH" ]; then
-      echo "--> Link simbólico para nvim já existe. Pulando."
-    elif [ -d "$NVIM_TARGET_PATH" ]; then
-      echo "--> AVISO: Diretório '$NVIM_TARGET_PATH' já existe. Fazendo backup."
-      mv "$NVIM_TARGET_PATH" "$NVIM_TARGET_PATH.bak_$(date +%Y%m%d%H%M%S)"
-      ln -sfn "$NVIM_SOURCE_PATH" "$NVIM_TARGET_PATH"
-      echo "--> Link simbólico para nvim criado."
-    else
-      ln -sfn "$NVIM_SOURCE_PATH" "$NVIM_TARGET_PATH"
-      echo "--> Link simbólico para nvim criado."
-    fi
-  else
-    echo "--> AVISO: Diretório de origem do nvim não encontrado."
-  fi
+  # Removido o tratamento especial para nvim, pois o LazyVim já foi instalado
+  # e a intenção é usar a configuração padrão do LazyVim diretamente.
+  echo "--> Nota: A configuração do Neovim (LazyVim) já foi tratada anteriormente."
+
   cd "$HOME"
 else
   echo "--> Pulando configuração com Stow."
 fi
 
----
 ### Configurações Finais
----
 echo "--> Configurando Docker..."
-sudo groupadd docker
-sudo usermod -aG docker $USER
+sudo groupadd docker || true # Adiciona '|| true' para não parar o script se o grupo já existir
+sudo usermod -aG docker "$USER"
 sudo systemctl enable docker.service
 sudo systemctl start docker.service
 
@@ -239,7 +256,7 @@ echo "Próximos passos recomendados:"
 echo "1. **Reiniciar o sistema** ou fazer **logout e login**."
 echo "2. **Configurar o Zsh para usar Antigen:** Adicione 'source ~/antigen.zsh' e a configuração dos seus plugins Zsh ao seu arquivo ~/.zshrc."
 echo "3. Explorar os aplicativos instalados: Brave Browser, Bitwarden, Ente Auth, etc."
-echo "4. **Verificar Dotfiles:** Confirme se os links simbólicos foram criados corretamente em seu diretório home (para gitconf, tmux, zsh) e em ~/.config (para nvim)."
+echo "4. **Verificar Dotfiles:** Confirme se os links simbólicos foram criados corretamente em seu diretório home (para gitconf, tmux, zsh) e em ~/.config (para nvim). **Lembre-se que o Neovim agora usa a configuração do LazyVim.**"
 echo "5. **Configurar o Timeshift:** Abra o Timeshift (procure no menu de aplicativos ou execute 'timeshift-launcher' no terminal) e configure os backups do sistema."
 echo "6. **Abrir o Neovim:** Execute 'nvim'. Se a configuração foi linkada corretamente, ele deve carregar suas configurações. Use :Lazy (ou o comando do seu gerenciador) para instalar plugins."
 echo "7. **Abrir o Tmux:** Execute 'tmux'. Se a configuração foi linkada, ele deve carregar suas configurações. Use o prefixo + I (geralmente Ctrl+b + I) para instalar plugins do TPM, se configurado."
