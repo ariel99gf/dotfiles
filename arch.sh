@@ -47,6 +47,38 @@ else
   echo "--> 'fzf-git' não está instalado."
 fi
 
+# --- Instalação do Yay (AUR Helper) ---
+echo "--> Instalando Yay (AUR Helper)..."
+if ! command -v yay &>/dev/null; then
+  echo "--> Yay não encontrado. Instalando a partir do AUR..."
+  BUILD_DIR=$(mktemp -d)
+  echo "--> Usando diretório temporário para build: $BUILD_DIR"
+  yes | sudo pacman -S --noconfirm --needed git base-devel
+  git clone https://aur.archlinux.org/yay-git.git "$BUILD_DIR/yay-git"
+  cd "$BUILD_DIR/yay-git"
+  makepkg -si --noconfirm
+  cd "$HOME"
+  echo "--> Limpando diretório temporário de build..."
+  rm -rf "$BUILD_DIR"
+  echo "--> Yay instalado com sucesso."
+else
+  echo "--> Yay já está instalado."
+fi
+
+# --- Instalação de Pacotes do AUR via Yay ---
+echo "--> Instalando pacotes do AUR via Yay..."
+yay -S --noconfirm --needed mise tofi
+
+# --- Instalação de Linguagens de Programação com Mise ---
+echo "--> Configurando e instalando linguagens com Mise..."
+export PATH="$HOME/.local/share/mise/shims:$PATH"
+echo "--> Instalando Go, Python e Node.js..."
+mise use -g go@latest
+mise use -g python@latest
+mise use -g node@latest
+echo "--> Instalando pacotes globais do Node.js (ex: typescript)..."
+npm i -g typescript
+
 # --- Instalação de Pacotes Essenciais e Ferramentas ---
 echo "--> Instalando pacotes essenciais e ferramentas via Pacman..."
 yes | sudo pacman -S --noconfirm --needed \
@@ -90,40 +122,6 @@ echo "--> Removendo a pasta .git do LazyVim..."
 rm -rf "$HOME/.config/nvim/.git"
 
 echo "--> LazyVim instalado com sucesso!"
-
-# Continuação do Script Original
-
-# --- Instalação do Yay (AUR Helper) ---
-echo "--> Instalando Yay (AUR Helper)..."
-if ! command -v yay &>/dev/null; then
-  echo "--> Yay não encontrado. Instalando a partir do AUR..."
-  BUILD_DIR=$(mktemp -d)
-  echo "--> Usando diretório temporário para build: $BUILD_DIR"
-  yes | sudo pacman -S --noconfirm --needed git base-devel
-  git clone https://aur.archlinux.org/yay-git.git "$BUILD_DIR/yay-git"
-  cd "$BUILD_DIR/yay-git"
-  makepkg -si --noconfirm
-  cd "$HOME"
-  echo "--> Limpando diretório temporário de build..."
-  rm -rf "$BUILD_DIR"
-  echo "--> Yay instalado com sucesso."
-else
-  echo "--> Yay já está instalado."
-fi
-
-# --- Instalação de Pacotes do AUR via Yay ---
-echo "--> Instalando pacotes do AUR via Yay..."
-yay -S --noconfirm --needed mise tofi
-
-# --- Instalação de Linguagens de Programação com Mise ---
-echo "--> Configurando e instalando linguagens com Mise..."
-export PATH="$HOME/.local/share/mise/shims:$PATH"
-echo "--> Instalando Go, Python e Node.js..."
-mise use -g go@latest
-mise use -g python@latest
-mise use -g node@latest
-echo "--> Instalando pacotes globais do Node.js (ex: typescript)..."
-npm i -g typescript
 
 # --- Configuração do Flatpak e Instalação de Aplicativos ---
 echo "--> Instalando e Configurando Flatpak..."
