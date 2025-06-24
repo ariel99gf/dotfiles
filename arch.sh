@@ -133,9 +133,12 @@ flatpak install flathub com.brave.Browser -y
 # Instalação do Bitwarden
 echo "--> Instalando Bitwarden via Flatpak..."
 flatpak install flathub com.bitwarden.desktop -y
-# ADICIONADO: Instalação do Ente Auth
+# Instalação do Ente Auth
 echo "--> Instalando Ente Auth via Flatpak..."
 flatpak install flathub io.ente.auth -y
+# Instalação do Obsidian
+echo "--> Instalando Obsidian via Flatpak..."
+flatpak install flathub md.obsidian.Obsidian -y
 
 # --- Guia Interativo para Configuração da Chave SSH ---
 echo "--> Configurando chave SSH para GitHub..."
