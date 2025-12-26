@@ -115,10 +115,10 @@ git config --global user.email "50802265+ariel99gf@users.noreply.github.com"
 
 echo "--> Configurando Aliases..."
 if ! grep -q "alias backup-now=" "$HOME/.bashrc"; then
-    echo "alias backup-now='sudo btrbk -c /etc/btrbk/btrbk-external.conf run'" >> "$HOME/.bashrc"
-    echo "Alias 'backup-now' adicionado."
+    echo "alias backup-now='sudo btrbk -c /etc/btrbk/btrbk.conf run && $HOME/backup-data-ext4.sh'" >> "$HOME/.bashrc"
+    echo "   Alias 'backup-now' adicionado ao .bashrc"
 else
-    echo "Alias 'backup-now' já existente."
+    echo "   Alias 'backup-now' já configurado."
 fi
 
 echo ""
