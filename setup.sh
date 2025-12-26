@@ -34,6 +34,7 @@ yay -S --noconfirm --needed \
   tmux \
   lazydocker \
   lazygit \
+  stow \
   timr
 
 # --- 3. Instalação do YouTube Music (WebApp Nativo) ---
