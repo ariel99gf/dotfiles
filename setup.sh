@@ -1,16 +1,54 @@
 #!/bin/bash
 set -e
 
+# --- Funções Auxiliares ---
+
+# Função para remover pacote apenas se estiver instalado
+remove_if_installed() {
+    if pacman -Qi "$1" &> /dev/null; then
+        echo "--> Removendo $1..."
+        sudo pacman -Rns --noconfirm "$1"
+    else
+        echo "--> $1 não encontrado. Pulando."
+    fi
+}
+
+# Função nativa para criar WebApps (Substitui o omarchy-webapp-install quebrado)
+# Uso: create_webapp "Nome" "URL" "Icone" "Slug"
+create_webapp() {
+    local NAME="$1"
+    local URL="$2"
+    local ICON="$3"
+    local SLUG="$4"
+    local DESKTOP_FILE="$HOME/.local/share/applications/${SLUG}.desktop"
+
+    echo "--> Criando WebApp: $NAME ($SLUG)..."
+    
+    # Garante que o diretório de ícones e aplicações existe
+    mkdir -p "$HOME/.local/share/applications"
+    
+    # Cria o arquivo .desktop
+    cat <<EOF > "$DESKTOP_FILE"
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=$NAME
+Comment=WebApp para $NAME
+Exec=brave --app="$URL"
+Icon=$ICON
+Terminal=false
+StartupNotify=true
+Categories=Network;WebBrowser;
+EOF
+
+    chmod +x "$DESKTOP_FILE"
+    echo "    Atalho criado em: $DESKTOP_FILE"
+}
+
 echo "### Iniciando Configuração Pessoal (Perfil DevOps) sobre o Omarchy ###"
 
 # --- 1. Limpeza de Bloatware ---
-echo "--> Removendo pacotes gráficos não utilizados..."
-# Lista de remoção:
-# - spotify: Bloat (Usa YouTube Music)
-# - 1password: Bloat (Usa Bitwarden)
-# - obsidian: Redundante (Usa Neovim)
-# - signal-desktop: Não usa
-# - typora: Redundante (Usa Neovim para Markdown)
+echo "--> Verificando pacotes para remoção..."
 PACKAGES_TO_REMOVE=(
     spotify
     1password-beta
@@ -20,13 +58,15 @@ PACKAGES_TO_REMOVE=(
     typora
     libreoffice-fresh
 )
-# O comando || true impede que o script pare se algum pacote já não estiver lá
-sudo pacman -Rns --noconfirm "${PACKAGES_TO_REMOVE[@]}" || true
-echo "Pacotes removidos com sucesso."
+
+for pkg in "${PACKAGES_TO_REMOVE[@]}"; do
+    remove_if_installed "$pkg"
+done
+echo "Limpeza concluída."
 
 # --- 2. Instalação de Aplicativos Pessoais ---
 echo "--> Instalando aplicativos essenciais via Yay..."
-# NOTA: LocalSend já vem instalado no Omarchy.
+# Adicionado --needed para evitar reinstalação e warnings
 yay -S --noconfirm --needed \
   brave-bin \
   bitwarden \
@@ -37,24 +77,38 @@ yay -S --noconfirm --needed \
   stow \
   timr
 
-# --- 3. Instalação do YouTube Music (WebApp Nativo) ---
-echo "--> Configurando YouTube Music como WebApp..."
-curl -o "$HOME/.local/share/icons/youtube-music.png" "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Youtube_Music_icon.svg/2048px-Youtube_Music_icon.svg.png"
-omarchy-webapp-install "https://music.youtube.com" "YouTube Music" "youtube-music"
+# --- 3. Instalação do YouTube Music e Google Suite (WebApp Nativo) ---
+echo "--> Configurando WebApps..."
 
-# Google Suite (Usando ícones de documento do sistema para consistência)
-echo "--> Instalando Google Sheets, Docs e Slides..."
-omarchy-webapp-install "https://docs.google.com/spreadsheets" "Google Sheets" "application-vnd.oasis.opendocument.spreadsheet"
-omarchy-webapp-install "https://docs.google.com/document" "Google Docs" "application-vnd.oasis.opendocument.text"
-omarchy-webapp-install "https://docs.google.com/presentation" "Google Slides" "application-vnd.oasis.opendocument.presentation"
+# Baixa ícone do YT Music
+mkdir -p "$HOME/.local/share/icons"
+curl -s -o "$HOME/.local/share/icons/youtube-music.png" "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Youtube_Music_icon.svg/2048px-Youtube_Music_icon.svg.png"
+
+# Criação dos WebApps usando a função corrigida
+# create_webapp "Nome" "URL" "Icone/Caminho" "NomeArquivoSemExtensao"
+create_webapp "YouTube Music" "https://music.youtube.com" "$HOME/.local/share/icons/youtube-music.png" "youtube-music"
+create_webapp "Google Sheets" "https://docs.google.com/spreadsheets" "application-vnd.oasis.opendocument.spreadsheet" "google-sheets"
+create_webapp "Google Docs" "https://docs.google.com/document" "application-vnd.oasis.opendocument.text" "google-docs"
+create_webapp "Google Slides" "https://docs.google.com/presentation" "application-vnd.oasis.opendocument.presentation" "google-slides"
 
 # Instala o atalho do Pomodoro (Janela Flutuante)
-# Sintaxe: omarchy-tui-install "Nome" "Comando" "Estilo" "URL_Icone"
-omarchy-tui-install "Pomodoro" "timr -m pomodoro -w 50:00 -p 10:00 -n on" float "https://cdn-icons-png.flaticon.com/512/2928/2928956.png"
+# Mantive o comando original do omarchy-tui se ele funcionar, senão pode precisar de ajuste similar
+omarchy-tui-install "Pomodoro" "timr -m pomodoro -w 50:00 -p 10:00 -n on" float "https://cdn-icons-png.flaticon.com/512/2928/2928956.png" || echo "Aviso: Falha ao instalar atalho TUI do Pomodoro."
 
 # --- 4. Configuração de Rede (Tailscale) ---
 echo "--> Instalando e Configurando Tailscale..."
-omarchy-install-tailscale
+# Adicionado --needed no pacman interno caso o script omarchy não tenha
+if command -v pacman &> /dev/null; then
+    sudo pacman -S --noconfirm --needed tailscale
+fi
+# Executa o setup do tailscale se o comando específico existir, ou fallback
+if command -v omarchy-install-tailscale &> /dev/null; then
+    omarchy-install-tailscale
+else
+    # Fallback manual caso o script omarchy falhe
+    sudo systemctl enable --now tailscaled
+fi
+
 echo "⚠️  IMPORTANTE: Se o Tailscale não pediu autenticação, rode 'sudo tailscale up' manualmente ao final."
 
 # --- 5. Configuração do Windows VM ---
@@ -68,12 +122,15 @@ else
 fi
 
 # --- 6. Configuração de Dev (DevOps Focus) ---
-echo "--> Configurando linguagens..."
+echo "--> Configurando linguagens (Mise)..."
+# Verificação básica para garantir que o mise está carregado
+eval "$(mise activate bash)" || echo "Aviso: Não foi possível ativar o mise nesta sessão."
+
 omarchy-install-dev-env node
 omarchy-install-dev-env python
 omarchy-install-dev-env go
 
-# Java (Versão específica para Backend legado/compatibilidade)
+# Java
 echo "--> Instalando Java (Temurin 21 LTS)..."
 mise use --global java@temurin-21
 
@@ -99,6 +156,9 @@ echo "--> Configurando Dotfiles..."
 DOTFILES_DIR="$HOME/Work/dotfiles"
 DOTFILES_REPO="git@github.com:ariel99gf/dotfiles.git"
 
+# Garante que a pasta Work existe
+mkdir -p "$HOME/Work"
+
 if [ ! -d "$DOTFILES_DIR" ]; then
   git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
 else
@@ -107,7 +167,7 @@ fi
 
 cd "$DOTFILES_DIR"
 echo "--> Linkando configurações do Tmux..."
-stow --adopt -vSt ~ tmux
+stow --adopt -vSt ~ tmux || echo "Aviso: Stow encontrou conflitos ou já estava linkado."
 
 # --- 9. Git Identity ---
 echo "--> Configurando Identidade do Git..."
