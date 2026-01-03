@@ -98,7 +98,7 @@ git config --global gpg.format ssh
 git config --global commit.gpgsign true
 
 # Tenta detectar chave SSH do agente (Bitwarden deve estar desbloqueado)
-SSH_KEY=$(ssh-add -L 2>/dev/null | head -n1 | awk '{print $2}')
+SSH_KEY=$(ssh-add -L 2>/dev/null | head -n1 | awk '{print $1, $2}')
 if [ -n "$SSH_KEY" ]; then
     git config --global user.signingkey "$SSH_KEY"
     log "Git configurado para assinar com chave detectada."
