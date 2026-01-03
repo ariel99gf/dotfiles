@@ -48,7 +48,8 @@ log "Instalando aplicativos e ferramentas..."
 yay -S --noconfirm --needed \
   brave-bin bitwarden bitwarden-cli tmux lazydocker lazygit stow timr \
   tailscale rancher-desktop freerdp openbsd-netcat gum python-pipx \
-  ttf-jetbrains-mono-nerd btrbk
+  ttf-jetbrains-mono-nerd btrbk \
+  eza bat zoxide ripgrep fd httpie stern trivy k6
 
 # --- 2. WebApps & TUI ---
 log "Configurando WebApps..."
@@ -88,10 +89,10 @@ else
     warn "Arquivo de tuning do kernel não encontrado em $DOTFILES_DIR"
 fi
 
-# Bitwarden SSH Agent (Bashrc)
-if ! grep -q "SSH_AUTH_SOCK.*bitwarden" "$HOME/.bashrc"; then
-    echo 'export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"' >> "$HOME/.bashrc"
-    export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
+# Configura o carregamento do .bash_aliases se não existir
+if ! grep -q ".bash_aliases" "$HOME/.bashrc"; then
+    log "Configurando .bashrc para carregar .bash_aliases..."
+    echo '[ -f ~/.bash_aliases ] && . ~/.bash_aliases' >> "$HOME/.bashrc"
 fi
 
 # --- 4. Ambiente de Desenvolvimento (Mise) ---
@@ -118,7 +119,7 @@ mkdir -p "$HOME/Work"
 # Instala o Tmux Plugin Manager (TPM)
 [ ! -d "$HOME/.tmux/plugins/tpm" ] && git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
 
-stow --dir="$HOME/Work/dotfiles" --target="$HOME" --adopt -vSt tmux bin systemd backup || true
+stow --dir="$HOME/Work/dotfiles" --target="$HOME" --adopt -vSt tmux bin systemd backup bash || true
 # Garante que a versão do repositório prevaleça sobre a local adotada
 cd "$HOME/Work/dotfiles" && git restore . && cd - > /dev/null
 
@@ -136,9 +137,6 @@ if [ -n "$SSH_KEY" ]; then
 else
     warn "Nenhuma chave SSH encontrada no agente. Configure 'user.signingkey' manualmente após desbloquear o Bitwarden."
 fi
-
-# Alias de Backup
-grep -q "alias backup-now" "$HOME/.bashrc" || echo "alias backup-now='sudo btrbk -c /etc/btrbk/btrbk.conf run && $HOME/backup-data-ext4.sh'" >> "$HOME/.bashrc"
 
 # Projetos de Trabalho
 mkdir -p "$HOME/Work/Clients"
