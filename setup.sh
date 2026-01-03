@@ -25,7 +25,7 @@ for pkg in "${PKGS_REM[@]}"; do remove_installed "$pkg"; done
 log "Instalando aplicativos e ferramentas..."
 yay -S --noconfirm --needed \
   brave-bin bitwarden bitwarden-cli tmux lazydocker lazygit stow timr \
-  tailscale freerdp openbsd-netcat gum
+  tailscale rancher-desktop freerdp openbsd-netcat gum python-pipx
 
 # --- 2. WebApps & TUI ---
 log "Configurando WebApps..."
@@ -69,6 +69,9 @@ fi
 
 # --- 4. Ambiente de Desenvolvimento (Mise) ---
 log "Configurando Ambiente Dev (Mise)..."
+
+export MISE_FETCH_REMOTE_VERSIONS_TIMEOUT=30s
+
 eval "$(mise activate bash)" || warn "Mise não ativado na sessão atual."
 
 # Linguagens e Ferramentas
@@ -112,7 +115,7 @@ declare -A REPOS=(
     ["albastore"]="git@github.com:ariel99gf/albastore.git"
     ["ariel99gf"]="git@github.com:ariel99gf/ariel99gf.git"
     ["nextjs-commerce"]="git@github.com:ariel99gf/nextjs-commerce.git"
-    ["my-note-app"]="git@github.com:ariel99gf/my-note-app.git"
+    ["my-node-app"]="git@github.com:ariel99gf/my-node-app.git"
     ["homelab"]="git@github.com:ariel99gf/homelab.git"
     ["My-notes"]="git@github.com:ariel99gf/My-notes.git"
     ["books"]="git@github.com:ariel99gf/books.git"
