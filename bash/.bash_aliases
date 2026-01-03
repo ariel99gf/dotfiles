@@ -27,3 +27,48 @@ fi
 if command -v rg &> /dev/null; then
     alias grep='rg'
 fi
+
+# --- DevOps & Cloud Aliases ---
+
+# Kubernetes
+alias k='kubectl'
+alias kx='kubectx'
+alias kn='kubens'
+alias kg='kubectl get'
+alias kgp='kubectl get pods'
+alias kgs='kubectl get services'
+alias kgd='kubectl get deployments'
+alias kdp='kubectl describe pod'
+alias kdd='kubectl describe deployment'
+alias kdel='kubectl delete'
+alias klogs='kubectl logs'
+alias kex='kubectl exec -it'
+
+# Terraform
+alias tf='terraform'
+alias tfi='terraform init'
+alias tfp='terraform plan'
+alias tfa='terraform apply'
+alias tfd='terraform destroy'
+alias tfo='terraform output'
+alias tfv='terraform validate'
+
+# Docker
+alias d='docker'
+alias dc='docker compose'
+alias dps='docker ps'
+alias dpsa='docker ps -a'
+alias di='docker images'
+alias drm='docker rm'
+alias drmi='docker rmi'
+alias dex='docker exec -it'
+
+# Git (Complementing existing ones)
+alias gs='git status'
+alias gl='git log --oneline --graph --decorate'
+alias gp='git push'
+alias gpl='git pull'
+alias gco='git checkout'
+alias gb='git branch'
+alias gd='git diff'
+

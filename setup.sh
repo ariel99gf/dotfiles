@@ -109,7 +109,8 @@ done
 
 mise use --global java@temurin-21 \
     terraform@latest kubectl@latest k9s@latest helm@latest \
-    ansible@latest awscli@latest jq@latest yq@latest
+    ansible@latest awscli@latest jq@latest yq@latest \
+    pre-commit@latest gitleaks@latest tflint@latest yamllint@latest hadolint@latest
 
 # --- 5. Dotfiles & Git ---
 log "Sincronizando Dotfiles e Git..."
@@ -119,7 +120,7 @@ mkdir -p "$HOME/Work"
 # Instala o Tmux Plugin Manager (TPM)
 [ ! -d "$HOME/.tmux/plugins/tpm" ] && git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
 
-stow --dir="$HOME/Work/dotfiles" --target="$HOME" --adopt -vSt tmux bin systemd backup bash || true
+stow --dir="$HOME/Work/dotfiles" --target="$HOME" --adopt -vSt tmux bin systemd backup bash starship || true
 # Garante que a versão do repositório prevaleça sobre a local adotada
 cd "$HOME/Work/dotfiles" && git restore . && cd - > /dev/null
 

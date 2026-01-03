@@ -1,0 +1,75 @@
+# ~/.config/starship.toml
+
+# Use custom format
+format = """
+[┌───────────────────>](bold green)
+[│](bold green)$directory$rust$package$node$python$go$java$php$ruby$terraform$docker_context$kubernetes$aws$gcloud$azure
+[└─>](bold green) $git_branch$git_status$character"""
+
+# Disable the blank line at the start of the prompt
+add_newline = false
+
+# Wait 10 milliseconds for starship to check files under the current directory.
+scan_timeout = 10
+
+# Set 'symbol' to ' ' to turn off symbols
+# [package]
+# symbol = "📦 "
+
+[character]
+success_symbol = "[➜](bold green)"
+error_symbol = "[✗](bold red)"
+
+[directory]
+truncation_length = 3
+truncation_symbol = "…/"
+style = "bold cyan"
+
+[git_branch]
+symbol = "🌱 "
+style = "bold purple"
+
+[git_status]
+style = "bold red"
+format = '([$all_status$ahead_behind]($style) )'
+
+[aws]
+symbol = "☁️  "
+style = "bold yellow"
+format = '[$symbol($profile )(\($region\) )]($style)'
+
+[docker_context]
+symbol = "🐳 "
+style = "blue"
+format = '[$symbol$context]($style) '
+
+[kubernetes]
+symbol = "☸ "
+style = "cyan"
+format = '[$symbol$context( \($namespace\))]($style) '
+disabled = false
+
+[terraform]
+symbol = "🏗  "
+style = "bold 105"
+format = '[$symbol$workspace]($style) '
+
+[golang]
+symbol = "🐹 "
+style = "bold cyan"
+format = '[$symbol($version )]($style)'
+
+[python]
+symbol = "🐍 "
+style = "yellow"
+format = '[$symbol($version )(\($virtualenv\) )]($style)'
+
+[nodejs]
+symbol = "🐢 "
+style = "bold green"
+format = '[$symbol($version )]($style)'
+
+[java]
+symbol = "☕ "
+style = "red"
+format = '[$symbol($version )]($style)'
