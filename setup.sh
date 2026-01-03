@@ -5,6 +5,22 @@ set -e
 log() { echo -e "\n--> $1"; }
 warn() { echo -e "⚠️  $1"; }
 
+# Tratamento de Erro (Diagnóstico)
+error_handler() {
+    local exit_code=$?
+    if [ $exit_code -ne 0 ]; then
+        echo -e "\n❌ Erro detectado no setup (Exit Code: $exit_code)."
+        if command -v omarchy-debug &>/dev/null; then
+            if gum confirm "Deseja rodar o omarchy-debug para diagnosticar o sistema?"; then
+                omarchy-debug
+            fi
+        else
+            warn "omarchy-debug não encontrado para diagnóstico."
+        fi
+    fi
+}
+trap error_handler EXIT
+
 remove_installed() {
     if pacman -Qi "$1" &> /dev/null; then
         log "Removendo $1..."
