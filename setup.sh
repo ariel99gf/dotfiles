@@ -5,6 +5,12 @@ set -e
 log() { echo -e "\n--> $1"; }
 warn() { echo -e "⚠️  $1"; }
 
+# Detecta diretório dos dotfiles (assume diretório atual ou padrão)
+DOTFILES_DIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+if [[ "$DOTFILES_DIR" != *"/dotfiles"* ]]; then
+    DOTFILES_DIR="$HOME/Work/dotfiles"
+fi
+
 # Tratamento de Erro (Diagnóstico)
 error_handler() {
     local exit_code=$?
@@ -41,7 +47,8 @@ for pkg in "${PKGS_REM[@]}"; do remove_installed "$pkg"; done
 log "Instalando aplicativos e ferramentas..."
 yay -S --noconfirm --needed \
   brave-bin bitwarden bitwarden-cli tmux lazydocker lazygit stow timr \
-  tailscale rancher-desktop freerdp openbsd-netcat gum python-pipx
+  tailscale rancher-desktop freerdp openbsd-netcat gum python-pipx \
+  ttf-jetbrains-mono-nerd btrbk
 
 # --- 2. WebApps & TUI ---
 log "Configurando WebApps..."
@@ -74,8 +81,12 @@ log "Configurando Sistema (Tailscale, Kernel, SSH)..."
 command -v omarchy-install-tailscale &>/dev/null && omarchy-install-tailscale || sudo systemctl enable --now tailscaled
 
 # Kernel Tuning (DevOps)
-sudo cp "$HOME/Work/dotfiles/system-files/etc/sysctl.d/99-devops.conf" /etc/sysctl.d/99-devops.conf
-sudo sysctl --system >/dev/null
+if [ -f "$DOTFILES_DIR/system-files/etc/sysctl.d/99-devops.conf" ]; then
+    sudo cp "$DOTFILES_DIR/system-files/etc/sysctl.d/99-devops.conf" /etc/sysctl.d/99-devops.conf
+    sudo sysctl --system >/dev/null
+else
+    warn "Arquivo de tuning do kernel não encontrado em $DOTFILES_DIR"
+fi
 
 # Bitwarden SSH Agent (Bashrc)
 if ! grep -q "SSH_AUTH_SOCK.*bitwarden" "$HOME/.bashrc"; then
@@ -103,7 +114,11 @@ mise use --global java@temurin-21 \
 log "Sincronizando Dotfiles e Git..."
 mkdir -p "$HOME/Work"
 [ ! -d "$HOME/Work/dotfiles" ] && git clone "git@github.com:ariel99gf/dotfiles.git" "$HOME/Work/dotfiles"
-stow --dir="$HOME/Work/dotfiles" --target="$HOME" --adopt -vSt ~ tmux bin systemd || true
+
+# Instala o Tmux Plugin Manager (TPM)
+[ ! -d "$HOME/.tmux/plugins/tpm" ] && git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+
+stow --dir="$HOME/Work/dotfiles" --target="$HOME" --adopt -vSt tmux bin systemd backup || true
 # Garante que a versão do repositório prevaleça sobre a local adotada
 cd "$HOME/Work/dotfiles" && git restore . && cd - > /dev/null
 
