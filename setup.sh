@@ -139,8 +139,27 @@ mkdir -p "$HOME/Work"
 
 [ ! -d "$HOME/.tmux/plugins/tpm" ] && git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
 
-stow --dir="$HOME/Work/dotfiles" --target="$HOME" --adopt -vSt tmux bin systemd backup bash starship || true
-cd "$HOME/Work/dotfiles" && git restore . && cd - > /dev/null
+# Configuração do Stow com logs detalhados
+STOW_PACKAGES=(tmux bin systemd backup bash starship)
+for pkg in "${STOW_PACKAGES[@]}"; do
+    log "Configurando $pkg..."
+    # --restow (-R) garante que links sejam atualizados/corrigidos
+    if stow --dir="$DOTFILES_DIR" --target="$HOME" --restow --adopt --verbose "$pkg"; then
+        echo "✅ $pkg configurado com sucesso."
+    else
+        warn "Falha ao configurar $pkg. Verifique o output acima."
+    fi
+done
+
+# Verificação de Sanidade (Links Críticos)
+if [ ! -L "$HOME/.bash_aliases" ]; then
+    warn "CRÍTICO: .bash_aliases não foi linkado corretamente. Tentando forçar..."
+    rm -rf "$HOME/.bash_aliases"
+    stow --dir="$DOTFILES_DIR" --target="$HOME" --restow bash
+fi
+
+# Garante que a versão do repositório prevaleça sobre a local adotada
+cd "$DOTFILES_DIR" && git restore . && cd - > /dev/null
 
 git config --global user.name "Ariel F."
 git config --global user.email "50802265+ariel99gf@users.noreply.github.com"
