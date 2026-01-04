@@ -4,6 +4,9 @@ export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
 # --- Backup ---
 alias backup-now='sudo btrbk -c /etc/btrbk/btrbk.conf run && $HOME/backup-data-ext4.sh'
 
+# --- SSH Key unlock ---
+alias unlock-ssh='export BW_SESSION=$(bw unlock --raw) && eval $(ssh-agent -s) && bw get item Omarchy-PC | jq -r ".sshKey.privateKey" | ssh-add -'
+
 # --- Modern Unix Tools ---
 
 # Zoxide (cd replacement)
