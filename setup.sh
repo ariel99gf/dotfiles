@@ -44,7 +44,7 @@ log "### Iniciando Configuração Pessoal (Perfil DevOps) ###"
 # --- 1. Limpeza e Instalação Base ---
 log "Gerenciando Pacotes..."
 
-PKGS_REM=(spotify 1password-beta 1password-cli obsidian signal-desktop typora libreoffice-fresh eza bat ripgrep fd lazygit lazydocker)
+PKGS_REM=(spotify 1password-beta 1password-cli obsidian signal-desktop typora libreoffice-fresh eza bat lazygit lazydocker)
 for pkg in "${PKGS_REM[@]}"; do remove_installed "$pkg"; done
 
 log "Instalando aplicativos de Sistema e GUI via Yay..."
