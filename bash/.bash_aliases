@@ -72,3 +72,8 @@ alias gco='git checkout'
 alias gb='git branch'
 alias gd='git diff'
 
+# --- Security & Compliance ---
+alias prw='prowler'
+alias ckv='checkov'
+alias khunt='kube-hunter'
+

@@ -126,7 +126,11 @@ mise use --global \
     hadolint@latest \
     pipx:httpie@latest \
     pipx:awscli-local@latest \
-    pipx:terraform-local@latest
+    pipx:terraform-local@latest \
+    pipx:prowler@latest \
+    pipx:checkov@latest \
+    pipx:scoutsuite@latest \
+    pipx:kube-hunter@latest
 
 # --- 5. Dotfiles & Git ---
 log "Sincronizando Dotfiles e Git..."
