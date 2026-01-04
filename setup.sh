@@ -89,13 +89,18 @@ fi
 # --- 4. Ambiente de Desenvolvimento (Mise) ---
 log "Configurando Ambiente Dev e CLI Tools (Mise)..."
 
-export MISE_FETCH_REMOTE_VERSIONS_TIMEOUT=30s
+export MISE_FETCH_REMOTE_VERSIONS_TIMEOUT=60s
+export MISE_HTTP_TIMEOUT=60s
 
 eval "$(mise activate bash)" || warn "Mise não ativado na sessão atual."
 
+# Instala ambientes dev completos (LSP, etc)
 for lang in node python go rust; do 
     command -v omarchy-install-dev-env &>/dev/null && omarchy-install-dev-env "$lang"
 done
+
+# Força Python 3.12 globalmente para compatibilidade de ferramentas pipx (Prowler)
+mise use --global python@3.12 java@temurin-21
 
 mise use --global \
     usage@latest \
@@ -110,7 +115,6 @@ mise use --global \
     stern@latest \
     trivy@latest \
     k6@latest \
-    java@temurin-21 \
     terraform@latest \
     kubectl@latest \
     k9s@latest \
