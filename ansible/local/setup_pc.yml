@@ -1,0 +1,134 @@
+---
+- name: "Setup Stateless DevOps - Mischa Philosophy (Final)"
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  vars:
+    nvme_path: "/var/mnt/nvme"
+    # Sintaxe moderna para evitar Warnings
+    workspace_dir: "{{ ansible_facts['env']['HOME'] }}/Workspace"
+    dotfiles_dir: "{{ workspace_dir }}/repos/dotfiles"
+
+    # Seus dados Git
+    git_name: "Ariel F."
+    git_email: "50802265+ariel99gf@users.noreply.github.com"
+
+    repositories:
+      - { name: "homelab", url: "git@github.com:ariel99gf/homelab.git" }
+      - { name: "dotfiles", url: "git@github.com:ariel99gf/dotfiles.git" }
+      - { name: "albastore", url: "git@github.com:ariel99gf/albastore.git" }
+      - { name: "My-notes", url: "git@github.com:ariel99gf/My-notes.git" }
+
+  tasks:
+    # 1. Configuração SSH
+    - name: "Garantir que o GitHub está no known_hosts"
+      known_hosts:
+        name: github.com
+        key: "{{ lookup('pipe', 'ssh-keyscan github.com') }}"
+        state: present
+
+    # 2. Infraestrutura NVMe
+    - name: "Garantir estrutura de pastas no NVMe"
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      with_items:
+        - "{{ nvme_path }}/repos"
+
+    # 3. Mapeamento do Workspace
+    - name: "Vincular Workspace ao NVMe"
+      file:
+        src: "{{ nvme_path }}/repos"
+        dest: "{{ workspace_dir }}"
+        state: link
+        force: yes
+
+    - name: "Garantir subpasta repos dentro do Workspace"
+      file:
+        path: "{{ workspace_dir }}/repos"
+        state: directory
+
+    # 4. Ferramentas de Interface e Produtividade
+    # Removidos: timr (vai usar GNOME), tailscale (já é nativo)
+    - name: "Instalar ferramentas de produtividade no Host via Brew"
+      shell: "brew install {{ item }}"
+      loop:
+        - tmux # Seu multiplexador principal
+        - stow # Gestão de dotfiles
+        - zoxide # Navegação rápida
+        - fzf # Busca rápida
+        - jq # JSON parser
+        - eza # ls moderno
+        - bat # cat moderno
+        - ripgrep # grep rápido
+        - fd # find rápido
+        - lazygit # Interface Git TUI
+        - lazydocker # Interface Docker TUI
+        - yq # YAML parser
+        - bitwarden-cli
+      register: brew_result
+      changed_when: "'already installed' not in brew_result.stderr"
+
+    # 4.1 DevPod (Linux Binary - Método Correto)
+    - name: "Instalar DevPod via Download Direto"
+      get_url:
+        url: "https://github.com/loft-sh/devpod/releases/latest/download/devpod-linux-amd64"
+        dest: "/home/linuxbrew/.linuxbrew/bin/devpod"
+        mode: "0755"
+
+    # 4.2 TPM (Tmux Plugin Manager)
+    - name: "Instalar TPM (Tmux Plugin Manager)"
+      git:
+        repo: "https://github.com/tmux-plugins/tpm"
+        dest: "{{ ansible_facts['env']['HOME'] }}/.tmux/plugins/tpm"
+
+    # 5. GitOps - Clonagem
+    - name: "Clonar repositórios para Workspace/repos"
+      git:
+        repo: "{{ item.url }}"
+        dest: "{{ workspace_dir }}/repos/{{ item.name }}"
+        accept_hostkey: yes
+      with_items: "{{ repositories }}"
+
+    # 6. Configuração Global do Git (Identidade)
+    - name: "Configurar Identidade Git"
+      community.general.git_config:
+        name: "{{ item.key }}"
+        scope: global
+        value: "{{ item.value }}"
+      loop:
+        - { key: "user.name", value: "{{ git_name }}" }
+        - { key: "user.email", value: "{{ git_email }}" }
+        - { key: "gpg.format", value: "ssh" }
+        - { key: "commit.gpgsign", value: "true" } # Força assinatura global
+
+    # 7. Automação de Assinatura SSH (Detecta chave na RAM)
+    # Isso elimina a necessidade de configurar manualmente a signingkey toda vez
+    - name: "Configurar chave de assinatura Git (Se disponível na RAM)"
+      shell: |
+        SSH_KEY=$(ssh-add -L 2>/dev/null | head -n1 | awk '{print $1, $2}')
+        if [ -n "$SSH_KEY" ]; then
+          git config --global user.signingkey "$SSH_KEY"
+          echo "changed"
+        else
+          echo "skipped"
+        fi
+      register: git_signing
+      changed_when: "'changed' in git_signing.stdout"
+      ignore_errors: true
+
+    # 7.5 Garantir que .bashrc carrega .bash_aliases
+    - name: "Configurar .bashrc para carregar aliases"
+      lineinfile:
+        path: "{{ ansible_facts['env']['HOME'] }}/.bashrc"
+        line: "[ -f ~/.bash_aliases ] && . ~/.bash_aliases"
+        state: present
+        create: yes
+
+    # 8. Dotfiles
+    - name: "Aplicar dotfiles via GNU Stow"
+      shell: "stow --dir={{ dotfiles_dir }} --target={{ ansible_facts['env']['HOME'] }} --restow {{ item }}"
+      with_items:
+        - "tmux"
+        - "bash"
