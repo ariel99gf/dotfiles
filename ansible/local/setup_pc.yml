@@ -1,15 +1,15 @@
 ---
-- name: "Setup Stateless DevOps - Mischa Philosophy (Final)"
+- name: "Setup Stateless DevOps"
   hosts: localhost
   connection: local
   gather_facts: true
   vars:
     nvme_path: "/var/mnt/nvme"
-    # Sintaxe moderna para evitar Warnings
+    # Modern syntax to avoid Warnings
     workspace_dir: "{{ ansible_facts['env']['HOME'] }}/Workspace"
     dotfiles_dir: "{{ workspace_dir }}/repos/dotfiles"
 
-    # Seus dados Git
+    # Git Identity
     git_name: "Ariel F."
     git_email: "50802265+ariel99gf@users.noreply.github.com"
 
@@ -20,15 +20,15 @@
       - { name: "My-notes", url: "git@github.com:ariel99gf/My-notes.git" }
 
   tasks:
-    # 1. Configuração SSH
-    - name: "Garantir que o GitHub está no known_hosts"
+    # 1. SSH Configuration
+    - name: "Ensure GitHub is in known_hosts"
       known_hosts:
         name: github.com
         key: "{{ lookup('pipe', 'ssh-keyscan github.com') }}"
         state: present
 
-    # 2. Infraestrutura NVMe
-    - name: "Garantir estrutura de pastas no NVMe"
+    # 2. NVMe Infrastructure
+    - name: "Ensure directory structure on NVMe"
       file:
         path: "{{ item }}"
         state: directory
@@ -36,63 +36,62 @@
       with_items:
         - "{{ nvme_path }}/repos"
 
-    # 3. Mapeamento do Workspace
-    - name: "Vincular Workspace ao NVMe"
+    # 3. Workspace Mapping
+    - name: "Symlink Workspace to NVMe"
       file:
         src: "{{ nvme_path }}/repos"
         dest: "{{ workspace_dir }}"
         state: link
         force: yes
 
-    - name: "Garantir subpasta repos dentro do Workspace"
+    - name: "Ensure repos subdirectory in Workspace"
       file:
         path: "{{ workspace_dir }}/repos"
         state: directory
 
-    # 4. Ferramentas de Interface e Produtividade
-    # Removidos: timr (vai usar GNOME), tailscale (já é nativo)
-    - name: "Instalar ferramentas de produtividade no Host via Brew"
+    # 4. Interface and Productivity Tools
+    - name: "Install productivity tools on Host via Brew"
       shell: "brew install {{ item }}"
       loop:
-        - tmux # Seu multiplexador principal
-        - stow # Gestão de dotfiles
-        - zoxide # Navegação rápida
-        - fzf # Busca rápida
-        - jq # JSON parser
-        - eza # ls moderno
-        - bat # cat moderno
-        - ripgrep # grep rápido
-        - fd # find rápido
-        - lazygit # Interface Git TUI
-        - lazydocker # Interface Docker TUI
-        - yq # YAML parser
-        - bitwarden-cli
+        - tmux # Terminal Multiplexer
+        - stow # Dotfile Manager
+        - zoxide # Smarter cd
+        - fzf # Fuzzy Finder
+        - jq # JSON Processor
+        - eza # Modern ls
+        - bat # Modern cat
+        - ripgrep # Fast grep
+        - fd # Fast find
+        - lazygit # Git TUI
+        - lazydocker # Docker TUI
+        - yq # YAML Processor
+        - bitwarden-cli # CLI Password Manager
       register: brew_result
       changed_when: "'already installed' not in brew_result.stderr"
 
-    # 4.1 DevPod (Linux Binary - Método Correto)
-    - name: "Instalar DevPod via Download Direto"
+    # 4.1 DevPod (Linux Binary - Correct Method)
+    - name: "Install DevPod via Direct Download"
       get_url:
         url: "https://github.com/loft-sh/devpod/releases/latest/download/devpod-linux-amd64"
         dest: "/home/linuxbrew/.linuxbrew/bin/devpod"
         mode: "0755"
 
     # 4.2 TPM (Tmux Plugin Manager)
-    - name: "Instalar TPM (Tmux Plugin Manager)"
+    - name: "Install TPM (Tmux Plugin Manager)"
       git:
         repo: "https://github.com/tmux-plugins/tpm"
         dest: "{{ ansible_facts['env']['HOME'] }}/.tmux/plugins/tpm"
 
-    # 5. GitOps - Clonagem
-    - name: "Clonar repositórios para Workspace/repos"
+    # 5. GitOps - Cloning
+    - name: "Clone repositories to Workspace/repos"
       git:
         repo: "{{ item.url }}"
         dest: "{{ workspace_dir }}/repos/{{ item.name }}"
         accept_hostkey: yes
       with_items: "{{ repositories }}"
 
-    # 6. Configuração Global do Git (Identidade)
-    - name: "Configurar Identidade Git"
+    # 6. Global Git Configuration (Identity)
+    - name: "Configure Git Identity"
       community.general.git_config:
         name: "{{ item.key }}"
         scope: global
@@ -101,11 +100,10 @@
         - { key: "user.name", value: "{{ git_name }}" }
         - { key: "user.email", value: "{{ git_email }}" }
         - { key: "gpg.format", value: "ssh" }
-        - { key: "commit.gpgsign", value: "true" } # Força assinatura global
+        - { key: "commit.gpgsign", value: "true" } # Force global signing
 
-    # 7. Automação de Assinatura SSH (Detecta chave na RAM)
-    # Isso elimina a necessidade de configurar manualmente a signingkey toda vez
-    - name: "Configurar chave de assinatura Git (Se disponível na RAM)"
+    # 7. SSH Signing Automation (Detects key in RAM)
+    - name: "Configure Git signing key (If available in RAM)"
       shell: |
         SSH_KEY=$(ssh-add -L 2>/dev/null | head -n1 | awk '{print $1, $2}')
         if [ -n "$SSH_KEY" ]; then
@@ -118,8 +116,8 @@
       changed_when: "'changed' in git_signing.stdout"
       ignore_errors: true
 
-    # 7.5 Garantir que .bashrc carrega .bash_aliases
-    - name: "Configurar .bashrc para carregar aliases"
+    # 7.5 Ensure .bashrc loads .bash_aliases
+    - name: "Configure .bashrc to load aliases"
       lineinfile:
         path: "{{ ansible_facts['env']['HOME'] }}/.bashrc"
         line: "[ -f ~/.bash_aliases ] && . ~/.bash_aliases"
@@ -127,7 +125,7 @@
         create: yes
 
     # 8. Dotfiles
-    - name: "Aplicar dotfiles via GNU Stow"
+    - name: "Apply dotfiles via GNU Stow"
       shell: "stow --dir={{ dotfiles_dir }} --target={{ ansible_facts['env']['HOME'] }} --restow {{ item }}"
       with_items:
         - "tmux"
