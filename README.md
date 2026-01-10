@@ -1,39 +1,46 @@
-# 🚀 Ariel's Dotfiles (DevOps Profile)
+# 🚀 Ariel's Dotfiles (Stateless DevOps Profile)
 
-This repository contains my personal configuration files (dotfiles) and setup scripts to bootstrap a professional DevOps environment on Arch Linux (specifically targeted for **Omarchy**).
+This repository contains my personal configuration files and automation scripts tailored for a **Stateless Workstation** on **Bluefin-DX** (Fedora Atomic).
 
-It focuses on:
-*   **Infrastructure as Code:** Terraform, Ansible, Kubernetes.
-*   **Cloud Security:** Prowler, Checkov, ScoutSuite (installed via Mise/Pipx).
-*   **Productivity:** Neovim, Tmux, Starship, Zoxide.
-*   **Automation:** Comprehensive `setup.sh` script.
+Following the **Stateless Workstation** philosophy, this setup keeps the host operating system clean and minimal, leveraging **Dev Containers** for all development work.
+
+## 🏗 Architecture
+
+* **OS:** Bluefin-DX (Fedora Silverblue based).
+* **Host Automation:** Ansible (manages dotfiles, flatpaks, and host utilities).
+* **Development:** DevPod & DevContainers (Terraform, Kubernetes, Cloud CLIs run here).
+* **Productivity:** Tmux, Zoxide, Fzf, Lazygit.
+* **Secrets:** Bitwarden (SSH keys injected directly into RAM, never saved to disk).
+
+## 📂 Structure
+
+* `ansible/` - The brain of the host setup (`setup_pc.yml`).
+* `bash/` & `tmux/` - Dotfiles applied via GNU Stow.
+* `scripts/legacy/` - Archived scripts from the previous Arch Linux setup.
 
 ## 🛠 Installation
 
 To bootstrap a new machine:
 
-```bash
-# Clone the repository
-git clone https://github.com/ariel99gf/dotfiles.git ~/Work/dotfiles
-cd ~/Work/dotfiles
+1.  **Clone the repository:**
+    ```bash
+    mkdir -p ~/Workspace/repos
+    git clone [https://github.com/ariel99gf/dotfiles.git](https://github.com/ariel99gf/dotfiles.git) ~/Workspace/repos/dotfiles
+    cd ~/Workspace/repos/dotfiles
+    ```
 
-# Run the setup script
-./setup.sh
-```
+2.  **Run the Ansible Playbook:**
+    ```bash
+    # If Ansible is not installed, Bluefin usually has it or use: brew install ansible
+    ansible-playbook -i ansible/local/hosts.ini ansible/local/setup_pc.yml
+    ```
 
-## 🧪 Testing
+## 🚀 Daily Workflow
 
-This repository includes a Docker-based test suite to verify the `setup.sh` script logic in a clean environment.
+* **Start Day:** Run `unlock-ssh` to load keys from Bitwarden into RAM.
+* **Work:** Navigate to a project (e.g., `homelab`) and run `devpod up .` to start a full DevOps environment.
+* **Maintenance:** To update dotfiles or host configs, re-run the Ansible playbook.
 
-### Prerequisites
-*   Docker (or Rancher Desktop / Podman)
+## 📜 Legacy Info
 
-### Running Tests
-
-To test the installation process inside a container (mocking system commands):
-
-```bash
-./tests/run_tests.sh
-```
-
-> **Note:** The test suite mocks Omarchy-specific commands (`omarchy-webapp-install`, etc.) and uses `pacman` to install base dependencies, validating that the script flow works correctly from start to finish.
+The old setup based on **Arch Linux** and the monolithic `setup.sh` script has been moved to `scripts/legacy`.
