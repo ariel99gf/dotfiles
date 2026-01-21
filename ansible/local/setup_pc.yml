@@ -89,6 +89,18 @@
         dest: "{{ workspace_dir }}/repos/{{ item.name }}"
         accept_hostkey: yes
       with_items: "{{ repositories }}"
+      async: 45
+      poll: 0
+      register: git_clone_jobs
+
+    - name: "Wait for all repositories to be cloned"
+      ansible.builtin.async_status:
+        jid: "{{ item.ansible_job_id }}"
+      with_items: "{{ git_clone_jobs.results }}"
+      register: git_clone_status
+      until: git_clone_status.finished
+      retries: 30
+      delay: 5
 
     # 6. Global Git Configuration (Identity)
     - name: "Configure Git Identity"
