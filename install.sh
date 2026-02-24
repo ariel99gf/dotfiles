@@ -30,7 +30,7 @@ stow --target="$HOME" --restow bash tmux mise
 # Since config.toml is now linked to ~/.config/mise/config.toml,
 # Mise will pick up your tools (nvim, eza, bat, etc.) automatically.
 echo "📥 Installing developer tools via Mise..."
-mise trust
+mise trust ~/.config/mise/config.toml
 mise install -y
 
 echo "✅ Environment Ready!"
