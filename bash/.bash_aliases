@@ -1,3 +1,6 @@
+# --- Activate mise ---
+eval "$(/home/vscode/.local/bin/mise activate bash)"
+
 # --- Bitwarden SSH Agent ---
 export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
 
@@ -10,25 +13,25 @@ alias unlock-ssh='export BW_SESSION=$(bw unlock --raw) && eval $(ssh-agent -s) &
 # --- Modern Unix Tools ---
 
 # Zoxide (cd replacement)
-if command -v zoxide &> /dev/null; then
-    eval "$(zoxide init bash)"
-    alias cd='z'
+if command -v zoxide &>/dev/null; then
+  eval "$(zoxide init bash)"
+  alias cd='z'
 fi
 
 # Eza (ls replacement)
-if command -v eza &> /dev/null; then
-    alias ls='eza --icons --git --group-directories-first'
-    alias ll='eza --icons --git --header --long --group-directories-first'
+if command -v eza &>/dev/null; then
+  alias ls='eza --icons --git --group-directories-first'
+  alias ll='eza --icons --git --header --long --group-directories-first'
 fi
 
 # Bat (cat replacement)
-if command -v bat &> /dev/null; then
-    alias cat='bat'
+if command -v bat &>/dev/null; then
+  alias cat='bat'
 fi
 
 # Ripgrep (grep replacement)
-if command -v rg &> /dev/null; then
-    alias grep='rg'
+if command -v rg &>/dev/null; then
+  alias grep='rg'
 fi
 
 # --- DevOps & Cloud Aliases ---
@@ -79,4 +82,3 @@ alias gd='git diff'
 alias prw='prowler'
 alias ckv='checkov'
 alias khunt='kube-hunter'
-
