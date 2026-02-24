@@ -1,5 +1,5 @@
 # --- Activate mise ---
-eval "$(/home/vscode/.local/bin/mise activate bash)"
+eval "$(mise activate bash)"
 
 # --- Bitwarden SSH Agent ---
 export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
