@@ -28,8 +28,16 @@ echo "Applying stow for bash, tmux, and mise directories..."
 cd "$(dirname "$0")"
 stow --target="$HOME" --restow bash tmux mise
 
-# 5. Install all global tools (eza, nvim, zoxide, fzf, etc.)
-echo "Installing global tools via Mise..."
+# 5. PERSONAL PREFERENCE: Setup LazyVim (Moved from postCreateCommand)
+if [ ! -d "$HOME/.config/nvim" ]; then
+  echo "Setting up LazyVim..."
+  git clone https://github.com/LazyVim/starter "$HOME/.config/nvim"
+  rm -rf "$HOME/.config/nvim/.git"
+fi
+
+# 6. Install all global tools and trust the current directory
+echo "Installing personal tools via Mise..."
+mise trust
 mise install -y
 
 echo "Dotfiles successfully configured!"
