@@ -1,27 +1,36 @@
 #!/bin/bash
-# install.sh - Simple & Robust Bootstrapper
+# install.sh - Final robust version for DevPod
 
 echo "🚀 Starting Personal Environment Setup..."
 
-# 1. Force ~/.local/bin into PATH for this script execution
+# 1. Ensure ~/.local/bin is in PATH for this script session
 export PATH="$HOME/.local/bin:$PATH"
 
-# 2. Install essentials
+# 2. Install essential system tools
+echo "📦 Installing system essentials (stow, curl, git)..."
 sudo apt-get update && sudo apt-get install -y stow curl git
 
 # 3. Ensure Mise is installed
 if ! command -v mise &>/dev/null; then
+  echo "🛠️ Installing Mise..."
   curl https://mise.run | sh
 fi
 
-# 4. Apply Symlinks
-# Since we renamed to .bash_aliases, Stow will succeed without conflicts
+# 4. Resolve Stow conflict
+# We remove the default .bash_aliases so Stow can link yours without errors
+echo "🔗 Preparing symlinks..."
+rm -f "$HOME/.bash_aliases"
+
+# 5. Apply symlinks
+# This links bash/.bash_aliases and mise/.config/mise/config.toml
 cd "$(dirname "$0")"
 stow --target="$HOME" --restow bash tmux mise
 
-# 5. Install Personal Tools using your dotfiles config
-echo "📥 Installing tools (eza, nvim, bat...) from global config..."
-mise trust "$HOME/.config/mise/config.toml"
-mise install -y --config "$HOME/.config/mise/config.toml"
+# 6. Install Personal Tools
+# Since config.toml is now linked to ~/.config/mise/config.toml,
+# Mise will pick up your tools (nvim, eza, bat, etc.) automatically.
+echo "📥 Installing developer tools via Mise..."
+mise trust
+mise install -y
 
-echo "✅ Success! Please run 'source ~/.bashrc' if aliases aren't active yet."
+echo "✅ Environment Ready!"
