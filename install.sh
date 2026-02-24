@@ -1,26 +1,27 @@
 #!/bin/bash
-# install.sh - Your environment's "Bootloader"
+# install.sh - Simple & Robust Bootstrapper
 
-# 1. Install system essentials
-echo "📦 Installing system essentials (stow, curl, git)..."
-sudo apt-get update && sudo apt-get install -y stow curl git
+echo "🚀 Starting Personal Environment Setup..."
 
-# 2. Install Mise (The tool manager)
-if ! command -v mise &>/dev/null; then
-  echo "🛠️ Installing Mise..."
-  curl https://mise.run | sh
-fi
-# Ensure Mise is in the PATH for this script session
+# 1. Force ~/.local/bin into PATH for this script execution
 export PATH="$HOME/.local/bin:$PATH"
 
-# 3. Apply symlinks (Stow)
-echo "🚀 Applying symlinks via Stow..."
+# 2. Install essentials
+sudo apt-get update && sudo apt-get install -y stow curl git
+
+# 3. Ensure Mise is installed
+if ! command -v mise &>/dev/null; then
+  curl https://mise.run | sh
+fi
+
+# 4. Apply Symlinks
+# Since we renamed to .bash_aliases, Stow will succeed without conflicts
 cd "$(dirname "$0")"
 stow --target="$HOME" --restow bash tmux mise
 
-# 4. Install everything in config.toml (eza, bat, nvim...)
-echo "📥 Installing global tools via Mise..."
-mise trust
-mise install -y
+# 5. Install Personal Tools using your dotfiles config
+echo "📥 Installing tools (eza, nvim, bat...) from global config..."
+mise trust "$HOME/.config/mise/config.toml"
+mise install -y --config "$HOME/.config/mise/config.toml"
 
-echo "✅ Environment successfully bootstrapped!"
+echo "✅ Success! Please run 'source ~/.bashrc' if aliases aren't active yet."
