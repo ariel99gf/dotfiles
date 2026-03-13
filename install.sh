@@ -33,4 +33,13 @@ echo "📥 Installing developer tools via Mise..."
 mise trust ~/.config/mise/config.toml
 mise install -y
 
+# 7. Setup Neovim (LazyVim)
+echo "🌙 Configuring Neovim (LazyVim)..."
+if [ ! -d "$HOME/.config/nvim" ]; then
+  echo "  Cloning LazyVim starter..."
+  git clone https://github.com/LazyVim/starter "$HOME/.config/nvim"
+else
+  echo "  LazyVim directory already exists, skipping clone."
+fi
+
 echo "✅ Environment Ready!"
