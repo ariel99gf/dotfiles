@@ -1,5 +1,5 @@
 # --- Activate Mise ---
-eval "$(~/.local/bin/mise activate bash)"
+eval "$(/usr/local/bin/mise activate bash)"
 
 # --- Bitwarden SSH Agent ---
 export SSH_AUTH_SOCK="$HOME/.bitwarden-ssh-agent.sock"
