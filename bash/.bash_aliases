@@ -82,3 +82,8 @@ alias gd='git diff'
 alias prw='prowler'
 alias ckv='checkov'
 alias khunt='kube-hunter'
+
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+export TERM=xterm-256color
