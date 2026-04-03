@@ -15,7 +15,7 @@ sudo apt-get update && sudo apt-get install -y \
     libssl-dev \
     pkg-config \
     unzip \
-    && rm -rf /var/lib/apt/lists/*
+    && sudo rm -rf /var/lib/apt/lists/*
 
 # 3. Ensure Mise is installed
 if ! command -v mise &>/dev/null; then
