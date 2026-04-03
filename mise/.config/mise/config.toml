@@ -1,13 +1,30 @@
 [tools]
+# Editor
 neovim = "0.11.5"
 tmux = "3.6a"
-opencode = "1.2.10"
+lazygit = "0.59.0"
+
+# DX
 eza = "0.23.4"
 bat = "0.26.1"
 zoxide = "0.9.9"
 fzf = "0.68.0"
 ripgrep = "15.1.0"
 fd = "10.3.0"
-lazygit = "0.59.0"
-jq = "1.8.1"
+
+# CLoud and tools
+oci = "latest"
+helm = "latest"
+minikube = "latest"
+trufflehog = "latest"
 bitwarden = "2026.1.0"
+
+# IA
+"npm:@google/gemini-cli" = "latest"
+"npm:@anthropic-ai/claude-code" = "latest"
+opencode = "1.2.10"
+jq = "1.8.1"
+
+# Runtimes
+node = "lts"
+pipx = "latest"

@@ -6,8 +6,8 @@
   vars:
     nvme_path: "/var/mnt/nvme"
     # Modern syntax to avoid Warnings
-    workspace_dir: "{{ ansible_facts['env']['HOME'] }}/Workspace"
-    dotfiles_dir: "{{ workspace_dir }}/repos/dotfiles"
+    workspace_dir: "{{ ansible_facts['env']['HOME'] }}/Projects"
+    dotfiles_dir: "{{ workspace_dir }}/dotfiles"
 
     # Git Identity
     git_name: "Ariel F."
@@ -16,8 +16,6 @@
     repositories:
       - { name: "homelab", url: "git@github.com:ariel99gf/homelab.git" }
       - { name: "dotfiles", url: "git@github.com:ariel99gf/dotfiles.git" }
-      - { name: "albastore", url: "git@github.com:ariel99gf/albastore.git" }
-      - { name: "My-notes", url: "git@github.com:ariel99gf/My-notes.git" }
 
   tasks:
     # 1. SSH Configuration
@@ -26,23 +24,6 @@
         name: github.com
         key: "{{ lookup('pipe', 'ssh-keyscan github.com') }}"
         state: present
-
-    # 2. NVMe Infrastructure
-    - name: "Ensure directory structure on NVMe"
-      file:
-        path: "{{ item }}"
-        state: directory
-        mode: "0755"
-      with_items:
-        - "{{ nvme_path }}/repos"
-
-    # 3. Workspace Mapping
-    - name: "Symlink Workspace to NVMe"
-      file:
-        src: "{{ nvme_path }}/repos"
-        dest: "{{ workspace_dir }}"
-        state: link
-        force: yes
 
     - name: "Ensure repos subdirectory in Workspace"
       file:
@@ -62,9 +43,6 @@
         - bat # Modern cat
         - ripgrep # Fast grep
         - fd # Fast find
-        - lazygit # Git TUI
-        - lazydocker # Docker TUI
-        - yq # YAML Processor
         - bitwarden-cli # CLI Password Manager
       register: brew_result
       changed_when: "'already installed' not in brew_result.stderr"
@@ -125,6 +103,11 @@
         create: yes
 
     # 8. Dotfiles
+    - name: "Prepare home directory for Stow (Remove conflicting files)"
+      file:
+        path: "{{ ansible_facts['env']['HOME'] }}/.bash_aliases"
+        state: absent
+
     - name: "Apply dotfiles via GNU Stow"
       shell: "stow --dir={{ dotfiles_dir }} --target={{ ansible_facts['env']['HOME'] }} --restow {{ item }}"
       with_items:

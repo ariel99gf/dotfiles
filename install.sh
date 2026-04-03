@@ -8,7 +8,14 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # 2. Install essential system tools
 echo "📦 Installing system essentials (stow, curl, git)..."
-sudo apt-get update && sudo apt-get install -y stow curl git
+sudo apt-get update && sudo apt-get install -y
+	stow \
+	curl \ 
+	git  \
+	libssl-dev \
+    	pkg-config \
+    	unzip \
+    	&& rm -rf /var/lib/apt/lists/*
 
 # 3. Ensure Mise is installed
 if ! command -v mise &>/dev/null; then
